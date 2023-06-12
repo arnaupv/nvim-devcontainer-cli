@@ -39,7 +39,7 @@ if ! type neovim >/dev/null 2>&1; then
 
 	# Installing neovim via appimage. Recommended approach: https://github.com/neovim/neovim/releases/download/v0.9.1/nvim-linux64.deb
 	# curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-	curl -LO https://github.com/neovim/neovim/releases/download/v0.9.1/nvim.appimage
+	curl -LO https://github.com/neovim/neovim/releases/download/v0.8.3/nvim.appimage
 	chmod u+x nvim.appimage
 	./nvim.appimage --appimage-extract
 	./squashfs-root/AppRun --version
