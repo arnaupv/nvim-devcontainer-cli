@@ -43,6 +43,8 @@ There are 2 commands: `:DevcontainerUp` and `:DevcontainerConnect`.
 
 3. If the process above finish successfully you are prepared for closing the current nvim session and open a new nvim inside the docker container. All this can be done from nvim itself, using the second command: `:DevcontainerConnect`.
 
+4. As an example, you can try to create the first devcontainer using neovim with the current repository, following the instructions above.
+
 ## TODOs (in order of priority)
 
 1. [x] Capability to attach in a running container
