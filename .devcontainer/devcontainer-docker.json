@@ -1,0 +1,12 @@
+{
+  "name": "Devcontainer CLI Demo",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "args": {
+      "USER_NAME": "my-app",
+      "GROUP_NAME": "my-app"
+    }
+  },
+  "remoteUser": "my-app",
+  "workspaceFolder": "/home/my-app/.local/share/nvim/lazy/nvim-devcontainer-cli/"
+}
