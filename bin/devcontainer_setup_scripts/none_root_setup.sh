@@ -1,8 +1,6 @@
 #!/bin/sh
 set -xe
 
-# mkdir ~/.config/
-
 # TODO: Installing my dotfiles. Instead of having this part of the code hardcoded, this config param has to be as a plugin config param.
 MY_HOME=$HOME # /root/
 git clone https://github.com/arnaupv/dotfiles.git ${MY_HOME}/dotfiles

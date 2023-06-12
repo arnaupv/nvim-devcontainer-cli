@@ -18,8 +18,6 @@ if ! type neovim >/dev/null 2>&1; then
 		fd-find \
 		python3 \
 		python3-pip
-	# neovim \
-	# python3-neovim
 
 	# Installing lazy git
 	LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
