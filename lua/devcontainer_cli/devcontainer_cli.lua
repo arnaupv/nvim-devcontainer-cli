@@ -23,7 +23,18 @@ end
 
 local function create_floating_terminal(command, opts)
 	-- TODO: Adapt size dynamically based on the screen size of the user
-
+	local on_fail = opts.on_fail
+		or function(exit_code)
+			vim.notify(
+				"The process running in the floating window has failed! exit_code: " .. exit_code,
+				vim.log.levels.ERROR
+			)
+		end
+	local on_success = opts.on_success
+		or function(win_id)
+			vim.notify("The process running in the floating window has succeeded!", vim.log.levels.INFO)
+			vim.api.nvim_win_close(win_id, true)
+		end
 	-- Set the size and position of the floating window
 	local width = 160
 	local height = 40
@@ -43,11 +54,16 @@ local function create_floating_terminal(command, opts)
 	})
 
 	-- Open terminal in the new window
-	-- TODO: this part of the code should not be part of the create_floadting_window function, as it has a different responsability
+	-- TODO: this part of the code should not be part of the create_floadting_window funclltion, as it has a different responsability
 	vim.fn.termopen(command, {
-		-- TODO: saves the output logs in a file which can be checked anytime.
-		-- TODO: Close the floating window when the terminal job exits
-		-- Examle: vim.api.nvim_win_close(win_id, true)
+		on_exit = function(_, exit_code)
+			-- TODO: saves the output logs in a file which can be checked anytime.
+			if exit_code == 0 then
+				on_success(win_id)
+			else
+				on_fail(exit_code)
+			end
+		end,
 		on_stdout = function(_, data, _)
 			-- Scroll the terminal window to view new output
 			vim.api.nvim_win_call(win_id, function()
@@ -82,7 +98,15 @@ function M.up(user_config)
 	end
 
 	local command = config.nvim_plugin_folder .. "/bin/spawn_devcontainer.sh true"
-	create_floating_terminal(command, {})
+	create_floating_terminal(command, {
+		on_success = function(win_id)
+			vim.notify("A devcontainer has been successfully spawn by the nvim-devcontainer-cli!", vim.log.levels.INFO)
+			vim.api.nvim_win_close(win_id, true)
+		end,
+		on_fail = function(exit_code)
+			vim.notify("A devcontainer has failed to spawn! exit_code: " .. exit_code, vim.log.levels.ERROR)
+		end,
+	})
 end
 
 function M.connect()
