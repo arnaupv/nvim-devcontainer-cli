@@ -1,4 +1,6 @@
-**Current Plugin is under development**
+🔧 **Current Plugin is under development**
+
+It can be used only for Docker images inheriting from **Ubuntu/Debian**. Example: [Dockerfile](./Dockerfile).
 
 # Devcontainer CLI (Nvim Plugin)
 
