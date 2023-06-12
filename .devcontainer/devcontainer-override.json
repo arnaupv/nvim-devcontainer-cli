@@ -1,4 +1,4 @@
 {
   "remoteUser": "root",
-  "workspaceFolder": "/workspaces/nvim-devcontainer-cli"
+  "workspaceFolder": "/home/my-app/.local/share/nvim/lazy/nvim-devcontainer-cli/"
 }

@@ -2,6 +2,7 @@ local M = {}
 
 local config = {
 	devcontainer_folder = ".devcontainer/",
+	nvim_plugin_folder = "~/.local/share/nvim/lazy/nvim-devcontainer-cli/",
 }
 
 local function define_autocommands()
@@ -13,14 +14,14 @@ local function define_autocommands()
 			-- TODO: checks that the devcontainer is not already connected
 			-- TODO: checks that there is a devcontainer running
 			vim.schedule(function()
-				local command = vim.fn.getcwd() .. "/bin/connect_to_devcontainer.sh"
+				local command = config.nvim_plugin_folder .. "/bin/connect_to_devcontainer.sh"
 				vim.fn.jobstart(command, { detach = true })
 			end)
 		end,
 	})
 end
 
-local function create_floating_window()
+local function create_floating_terminal(command, opts)
 	-- TODO: Adapt size dynamically based on the screen size of the user
 
 	-- Set the size and position of the floating window
@@ -43,12 +44,10 @@ local function create_floating_window()
 
 	-- Open terminal in the new window
 	-- TODO: this part of the code should not be part of the create_floadting_window function, as it has a different responsability
-	vim.fn.termopen("./bin/spawn_devcontainer.sh true", {
-		on_exit = function(job_id, exit_code)
-			-- TODO: saves the output logs in a file which can be checked anytime.
-			-- TODO: Close the floating window when the terminal job exits
-			-- Examle: vim.api.nvim_win_close(win_id, true)
-		end,
+	vim.fn.termopen(command, {
+		-- TODO: saves the output logs in a file which can be checked anytime.
+		-- TODO: Close the floating window when the terminal job exits
+		-- Examle: vim.api.nvim_win_close(win_id, true)
 		on_stdout = function(_, data, _)
 			-- Scroll the terminal window to view new output
 			vim.api.nvim_win_call(win_id, function()
@@ -82,7 +81,8 @@ function M.up(user_config)
 		print("Devcontainer folder detected. Path: " .. config.devcontainer_folder)
 	end
 
-	create_floating_window()
+	local command = config.nvim_plugin_folder .. "/bin/spawn_devcontainer.sh true"
+	create_floating_terminal(command, {})
 end
 
 function M.connect()

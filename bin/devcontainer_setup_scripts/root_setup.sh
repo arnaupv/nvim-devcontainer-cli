@@ -51,4 +51,5 @@ if ! type neovim >/dev/null 2>&1; then
 
 	# Forcing ~/.config/ accessible by my-app user
 	chown -R my-app:my-app /home/my-app/.config
+	chown -R my-app:my-app /home/my-app/.local
 fi
