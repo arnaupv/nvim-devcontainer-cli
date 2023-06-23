@@ -45,6 +45,18 @@ There are 2 commands: `:DevcontainerUp` and `:DevcontainerConnect`.
 
 4. As an example, you can try to create the first devcontainer using neovim with the current repository, following the instructions above.
 
+## Tests
+
+The plugin has been tested in the following environments:
+
+- Ubuntu 20.04
+
+Plugin unit tests can be executed from the root folder, using the Makefile.
+
+```bash
+make test
+```
+
 ## FEATUREs (in order of priority)
 
 1. [x] Capability to create and run a devcontainer using the [Devconatiner CLI](https://github.com/devcontainers/cli).
