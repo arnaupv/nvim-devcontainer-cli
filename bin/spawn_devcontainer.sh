@@ -16,19 +16,18 @@ if [ "$1" = "true" ]; then
 	shift
 fi
 
-WORKSPACE="./"
-NVIM_DEVCONTAINER_CLI_FOLDER=".local/share/nvim/lazy/nvim-devcontainer-cli/"
+NVIM_DEVCONTAINER_CLI_FOLDER=$(echo ${HOME}/.local/share/nvim/lazy/nvim-devcontainer-cli/ | sed "s|^$HOME||")
+HOME_IN_DOCKER_CONTAINER="/home/my-app/"
+NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER=${HOME_IN_DOCKER_CONTAINER}${NVIM_DEVCONTAINER_CLI_FOLDER}
 DEVCONTAINER_OVERRIDE_CONFIG=.devcontainer/devcontainer-override.json
-HOME_DOCKER_CONTAINER="/home/my-app"
-NVIM_DEVCONTAINER_CLI_CONTAINER_FOLDER="${HOME_DOCKER_CONTAINER}/${NVIM_DEVCONTAINER_CLI_FOLDER}"
 
 devcontainer up $remove_flag \
 	--mount type=bind,source=${HOME}/.config/github-copilot,target=/home/my-app/.config/github-copilot \
-	--mount type=bind,source=${HOME}/${NVIM_DEVCONTAINER_CLI_FOLDER},target=${NVIM_DEVCONTAINER_CLI_CONTAINER_FOLDER} \
+	--mount type=bind,source=${HOME}/${NVIM_DEVCONTAINER_CLI_FOLDER},target=${NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER} \
 	--workspace-folder ${workspace}
 
 # Setting Up Devcontainer ()
 # TODO: Instead of having 2 different scripts (for root and not root users) we should have a unique script (simplifying the usage of the plugin)
-devcontainer exec --override-config ${DEVCONTAINER_OVERRIDE_CONFIG} --workspace-folder ${workspace} ${NVIM_DEVCONTAINER_CLI_CONTAINER_FOLDER}/bin/devcontainer_setup_scripts/root_setup.sh
+devcontainer exec --override-config ${DEVCONTAINER_OVERRIDE_CONFIG} --workspace-folder ${workspace} ${NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER}/bin/devcontainer_setup_scripts/root_setup.sh
 # Setting Up Devcontainer (no root permits)
-devcontainer exec --workspace-folder ${workspace} ${NVIM_DEVCONTAINER_CLI_CONTAINER_FOLDER}/bin/devcontainer_setup_scripts/none_root_setup.sh
+devcontainer exec --workspace-folder ${workspace} ${NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER}/bin/devcontainer_setup_scripts/none_root_setup.sh

@@ -1,4 +1,5 @@
 {
   "remoteUser": "root",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/my-app/.local/share/nvim/lazy/nvim-devcontainer-cli/,type=bind",
   "workspaceFolder": "/home/my-app/.local/share/nvim/lazy/nvim-devcontainer-cli/"
 }
