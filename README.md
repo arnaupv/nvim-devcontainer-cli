@@ -45,12 +45,15 @@ There are 2 commands: `:DevcontainerUp` and `:DevcontainerConnect`.
 
 4. As an example, you can try to create the first devcontainer using neovim with the current repository, following the instructions above.
 
-## TODOs (in order of priority)
+## FEATUREs (in order of priority)
 
-1. [x] Capability to attach in a running container
+1. [x] Capability to create and run a devcontainer using the [Devconatiner CLI](https://github.com/devcontainers/cli).
+1. [x] Capability to attach in a running devcontainer
+1. [x] The floating window created during the devcontainer Up process (:DevcontainerUp<cr>) is closed when the process finishes successfully.
+1. [ ] Add unit tests using plenary.busted lua module.
+1. [ ] The logs printed in the floating window when preparing the Devcontainer are saved and easy to access.
 1. [ ] Add a command for selecting between importing the nvim configuration from the local machine or downloading the dotfiles from github (using the internal decontainer cli [feature](https://github.com/devcontainers/cli/pull/362)).
 1. [ ] Detect the cause/s of the UI issues of neovim when running inside the docker container.
-1. [ ] The floating window created during the devcontainer Up process (:DevcontainerUp<cr>) is closed when the process finishes successfully. The logs printed in the floating window are saved and easy to access.
 1. [ ] Convert bash scripts in lua code.
 1. [ ] Currently bash scripts only support Ubuntu (OS). Once the code is migrated to lua, it has to cover the installation other OS.
 1. [ ] Create .devcontainer/devcontainer.json template automatically via a nvim command. Add examples for when the devcontainer is created from docker and also from docker-compose.
