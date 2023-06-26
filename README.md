@@ -33,6 +33,13 @@ This plugin has been inspired by the work previously done by [esensar](https://g
 },
 ```
 
+### Dependencies
+
+The following dependencies are required for the plugin to work properly:
+
+- [docker](https://docs.docker.com/get-docker/)
+- [devcontainer-cli](https://github.com/devcontainers/cli#npm-install)
+
 ## How to use?
 
 There are 2 commands: `:DevcontainerUp` and `:DevcontainerConnect`.
