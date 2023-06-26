@@ -2,31 +2,26 @@
 on: [push, pull_request]
 name: default
 
-jobs:
-  stylua:
-    name: stylua
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: JohnnyMorganz/stylua-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --color always --check lua
+env:
+  IMAGE_NAME: nvim-devcontainer-cli
 
-  test:
+jobs:
+  docker:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        nvim-versions: ['stable', 'nightly']
-    name: test
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - uses: rhysd/action-setup-vim@v1
+      - name: Pre-build devcontainer image
+        uses: devcontainers/ci@v0.3
         with:
-          neovim: true
-          version: ${{ matrix.nvim-versions }}
+          imageName:  ${{ env.IMAGE_NAME }} 
+          cacheFrom: ${{ env.IMAGE_NAME }}
+          push: never
 
-      - name: run tests
-        run: make test
+      - name: Run tests inside the docker image
+        uses: devcontainers/ci@v0.3
+        with:
+          cacheFrom: ${{ env.IMAGE_NAME }}
+          push: never
+          runCmd: make test
