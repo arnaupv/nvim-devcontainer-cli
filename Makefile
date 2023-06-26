@@ -8,4 +8,11 @@ test:
 		--headless \
 		--noplugin \
 		-u ${TESTS_INIT} \
+		-c "PlenaryBustedFile tests/devcontainer_cli/folder_utils_spec.lua"
+
+test_all:
+	@nvim \
+		--headless \
+		--noplugin \
+		-u ${TESTS_INIT} \
 		-c "PlenaryBustedDirectory ${TESTS_DIR} { minimal_init = '${TESTS_INIT}' }"

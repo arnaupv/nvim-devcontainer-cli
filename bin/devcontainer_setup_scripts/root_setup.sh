@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-if ! type neovim >/dev/null 2>&1; then
+if ! type nvim >/dev/null 2>&1; then
 	# Updating libraries to ensure nodejs >= 14 is being installed.
 	apt-get update
 	apt-get install -y curl wget
@@ -44,10 +44,21 @@ if ! type neovim >/dev/null 2>&1; then
 	rm nvim.appimage
 
 	# Exposing nvim globally
-	mv squashfs-root /
+	if [ ! -d /squashfs-root ]; then
+		mv squashfs-root /
+	fi
 	ln -s /squashfs-root/AppRun /usr/bin/nvim
 
 	# Forcing ~/.config/ accessible by my-app user
+	if [ ! -d /home/my-app/.config ]; then
+		mkdir /home/my-app/.config
+	fi
+
+	# Forcing ~/.local/ accessible by my-app user
+	if [ ! -d /home/my-app/.local ]; then
+		mkdir /home/my-app/.local
+	fi
+
 	chown -R my-app:my-app /home/my-app/.config
 	chown -R my-app:my-app /home/my-app/.local
 fi

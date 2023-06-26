@@ -1,0 +1,27 @@
+---
+on: [push, pull_request]
+name: default
+
+env:
+  IMAGE_NAME: nvim-devcontainer-cli
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Pre-build devcontainer image
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName:  ${{ env.IMAGE_NAME }} 
+          cacheFrom: ${{ env.IMAGE_NAME }}
+          push: never
+
+      - name: Run tests inside the docker image
+        uses: devcontainers/ci@v0.3
+        with:
+          cacheFrom: ${{ env.IMAGE_NAME }}
+          push: never
+          runCmd: make test

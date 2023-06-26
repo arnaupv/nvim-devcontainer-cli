@@ -21,17 +21,19 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 RUN npm install -g @devcontainers/cli
 
 # Installing Lua Dependencies for testing LUA projects
-# RUN luarocks install moonscript
 RUN luarocks install busted
-# RUN luarocks remove busted --force
-# RUN luarocks make
 
-# Create user called my-app in ubuntu and switch to this user
+# Create user called my-app in ubuntu
 ARG USER=my-app
 RUN useradd -ms /bin/bash ${USER}
-USER ${USER}
 
+# Install nvim
+COPY --chmod=0755 ./bin/devcontainer_setup_scripts/root_setup.sh .
+RUN ./root_setup.sh
+
+# Switch to user
 WORKDIR /home/${USER}
+USER ${USER}
 
 # Installing vim-plug
 RUN mkdir -p /home/${USER}/.local/share/nvim/lazy/nvim-devcontainer-cli/
