@@ -64,7 +64,7 @@ make test
 1. [x] The floating window created during the devcontainer Up process (:DevcontainerUp<cr>) is closed when the process finishes successfully.
 1. [ ] Add unit tests using plenary.busted lua module.
 1. [ ] The logs printed in the floating window when preparing the Devcontainer are saved and easy to access.
-1. [ ] Add a command for selecting between importing the nvim configuration from the local machine or downloading the dotfiles from github (using the internal decontainer cli [feature](https://github.com/devcontainers/cli/pull/362)).
+1. [ ] [Give the possibility of defining custom dotfiles when setting up the devcontainer](https://github.com/arnaupv/nvim-devcontainer-cli/issues/1)
 1. [ ] Detect the cause/s of the UI issues of neovim when running inside the docker container.
 1. [ ] Convert bash scripts in lua code.
 1. [ ] Currently bash scripts only support Ubuntu (OS). Once the code is migrated to lua, it has to cover the installation other OS.
