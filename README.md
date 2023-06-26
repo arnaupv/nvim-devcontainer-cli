@@ -47,14 +47,20 @@ There are 2 commands: `:DevcontainerUp` and `:DevcontainerConnect`.
 
 ## Tests
 
-The plugin has been tested in the following environments:
+Tests are executed automatically on each PR using Github Actions.
 
-- Ubuntu 20.04
-
-Plugin unit tests can be executed from the root folder, using the Makefile.
+In case you want to run Github Actions locally, it is recommended to use [act](https://github.com/nektos/act#installation).
+And then execute:
 
 ```bash
-make test
+$ act -W .github/workflows/default.yml
+```
+
+Another option would be to connect to the devcontainer following the **How to use?** section.
+Once connected to the devcontainer, execute:
+
+```bash
+$ make test
 ```
 
 ## FEATUREs (in order of priority)
