@@ -1,7 +1,3 @@
-🔧 **Current Plugin is under development**
-
-It can be used only for Docker images inheriting from **Ubuntu/Debian**. Example: [Dockerfile](./Dockerfile).
-
 # Devcontainer CLI (Nvim Plugin)
 
 First, which problem is this plugin trying to solve?
@@ -16,13 +12,30 @@ You can definitely use nvim for developing your code, but you quickly face probl
 
 **Solution:**
 
-There are multiple IDEs out there who give you the possibility to execute themself inside the Docker container you are developing, fixing the problems above, but there is nothing which works out-of-the-box for **nvim**. Recently, Microsoft opened the code used in VSCode for attaching the IDE to such containers ([Devconatiner CLI](https://github.com/devcontainers/cli)). The current **nvim** plugin aims to integrate such CLI in a **nvim** plugin for creating your own local development environment on the top of your containerized applications. This plugin allows you use LSP capabilities for external modules (installed inside the Docker container), and also debug your application ([DAP](https://microsoft.github.io/debug-adapter-protocol/)).
+There are multiple IDEs out there who give you the possibility to execute themself inside the Docker container you are developing, fixing the problems above, but there is nothing which works out-of-the-box for **nvim**. Recently, Microsoft opened the code used in VSCode for attaching the IDE to such containers ([Devconatiner CLI](https://github.com/devcontainers/cli)).
+
+The current **nvim** plugin aims to take advantage of such CLI for creating your own local development environment on the top of your containerized applications. This plugin allows you use LSP capabilities for external modules (installed inside the Docker container), and also debug your application ([DAP](https://microsoft.github.io/debug-adapter-protocol/)).
+
+But, what is happening under the hood?
+
+1. First, devcontainer-cli is used for setting up your devcontainer, building the image based on the instructions defined in your [devcontainer.json](.devcontainer/devcontainer.json) and initializing a container based on such image.
+1. Once the container is already running, nvim installed inside the Docker container together with a set of dependencies that can be found [here](https://github.com/arnaupv/nvim-devcontainer-cli/blob/main/bin/devcontainer_setup_scripts/root_setup.sh). This step resembles the installation of the [vscode-server](https://code.visualstudio.com/docs/devcontainers/containers) inside the container when using VSCode.
+1. Finally, nvim needs certain configuration to work properly. That's why the following [dotfiles repo](https://github.com/arnaupv/dotfiles) is cloned inside the container ([here](https://github.com/arnaupv/nvim-devcontainer-cli/blob/main/bin/devcontainer_setup_scripts/none_root_setup.sh#L6)).
+1. The last step is connecting inside the container. This could be done by `ssh` connection, but in this case the connection is done using `devcontainer exec` ([here](https://github.com/arnaupv/nvim-devcontainer-cli/blob/main/bin/connect_to_devcontainer.sh)).
+
+As you can see what the plugin does is installing and configuring neovim inside the container, instead of communicating with the info inside the container via nvim client/server. One of the negative consequences of such approach is that all plugins need to be installed each time a devcontainer session starts. This is far from being efficient and it is something that needs to be improved in the future. However, I personally consider that the current solution is good enough for starting to work with nvim inside a Docker container.\_
 
 **Inspiration:**
 
 This plugin has been inspired by the work previously done by [esensar](https://github.com/esensar/nvim-dev-container) and by [jamestthompson3](https://github.com/jamestthompson3/nvim-remote-containers). The main different is that this plugin benefits from the [Devcontainer CLI](https://github.com/devcontainers/cli) which was opensourced by Microsoft in April 2022.
 
-## Installation
+# Dependencies
+
+- Only Ubuntu/Debian Docker Host (tested with Ubuntu 20.04) - [Planning to support other OS in the future](https://github.com/arnaupv/nvim-devcontainer-cli/issues/5).
+- [docker](https://docs.docker.com/get-docker/)
+- [devcontainer-cli](https://github.com/devcontainers/cli#npm-install)
+
+# 🔧 Installation
 
 - [lazy.nvim](https://github.com/folke/lazy.nvim)
 
@@ -33,26 +46,19 @@ This plugin has been inspired by the work previously done by [esensar](https://g
 },
 ```
 
-### Dependencies
-
-The following dependencies are required for the plugin to work properly:
-
-- [docker](https://docs.docker.com/get-docker/)
-- [devcontainer-cli](https://github.com/devcontainers/cli#npm-install)
-
-## How to use?
+# How to use?
 
 There are 2 commands: `:DevcontainerUp` and `:DevcontainerConnect`.
 
-1. First you need to have your folder with the devcontainer instructions. This folder is usually called `.devcontainer` and contains a `devcontainer.json` file. This file is used by the [Devcontainer CLI](https://github.com/devcontainers/cli). You can find an example of a `devcontainer.json` file [here](.devcontainer/devcontainer.json). You can also find more information about the `devcontainer.json` file [here](https://code.visualstudio.com/docs/remote/devcontainerjson-reference).
+1. First you need to have your folder with the devcontainer instructions. This folder is usually called `.devcontainer` and contains a `devcontainer.json` file. This file is used by the [Devcontainer CLI](https://github.com/devcontainers/cli). As a first approach you can copy-paste the [.devcontainer](.devcontainer/devcontainer.json) folder of the current project and adapt it for your repo. You can also find more information about the `devcontainer.json` file [here](https://code.visualstudio.com/docs/remote/devcontainerjson-reference).
 
-2. Then open a nvim session and execute the first command: `DevcontainerUp`, which will create the image based on your Dockerfile. Once created it will initialize a container with the previously created image, adding nvim and other tools defined in ./bin/devcontainer_setup_scripts/ . Currently the following [dotfiles](https://github.com/arnaupv/dotfiles) are hardcoded [here](./bin/devcontainer_setup_scripts/none_root_setup.sh). The new devcontainer running can be easily checked with the following command: `docker ps -a`.
+1. Then open a nvim session and execute the first command: `DevcontainerUp`, which will create the image based on your Dockerfile. Once created it will initialize a container with the previously created image, adding nvim and other tools defined in ./bin/devcontainer_setup_scripts/ . Currently the following [dotfiles](https://github.com/arnaupv/dotfiles) are hardcoded [here](./bin/devcontainer_setup_scripts/none_root_setup.sh). The new devcontainer running can be easily checked with the following command: `docker ps -a`.
 
-3. If the process above finish successfully you are prepared for closing the current nvim session and open a new nvim inside the docker container. All this can be done from nvim itself, using the second command: `:DevcontainerConnect`.
+1. If the process above finishes successfully, you are prepared for closing the current nvim session and open a new nvim inside the docker container. All this can be done from nvim itself, using the second command: `:DevcontainerConnect`.
 
-4. As an example, you can try to create the first devcontainer using neovim with the current repository, following the instructions above.
+1. As an example, you can try to create the first devcontainer using cloning the current repository, following the instructions above.
 
-## Tests
+# Tests
 
 Tests are executed automatically on each PR using Github Actions.
 
@@ -70,7 +76,7 @@ Once connected to the devcontainer, execute:
 $ make test
 ```
 
-## FEATUREs (in order of priority)
+# FEATUREs (in order of priority)
 
 1. [x] Capability to create and run a devcontainer using the [Devconatiner CLI](https://github.com/devcontainers/cli).
 1. [x] Capability to attach in a running devcontainer
