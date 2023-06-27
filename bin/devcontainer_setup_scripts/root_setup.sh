@@ -1,4 +1,6 @@
 #!/bin/sh
+set -xe
+
 # Check if I'm connected as root user. If not, exit.
 if [ "$(id -u)" != "0" ]; then
 	echo "Sorry, you are not root."
