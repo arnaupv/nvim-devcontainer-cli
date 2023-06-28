@@ -12,9 +12,6 @@ if [ ! -d "${MY_HOME}"/dotfiles ]; then
 	cd -
 fi
 
-# TODO: such linters could be automatically installed by Neovim Plugins (Mason).
-# python packages: formating and linting
-pip install black isort
 # TODO: By default the zsh shell is installed inside the dev container. However this is not ideal, as the type of SHELL should be a plugin config param.
 if [ ! -d "${MY_HOME}"/.oh-my-zsh/ ]; then
 	sh -c "$(curl -L https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)"
