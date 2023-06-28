@@ -31,7 +31,7 @@ This plugin has been inspired by the work previously done by [esensar](https://g
 
 # Dependencies
 
-- Only Ubuntu/Debian Docker Host (tested with Ubuntu 20.04) - [Planning to support other OS in the future](https://github.com/arnaupv/nvim-devcontainer-cli/issues/5).
+- Only Ubuntu/Debian Docker Host (tested with Ubuntu 20.04 and 22.04) - [Planning to support other OS in the future](https://github.com/arnaupv/nvim-devcontainer-cli/issues/5).
 - [docker](https://docs.docker.com/get-docker/)
 - [devcontainer-cli](https://github.com/devcontainers/cli#npm-install)
 
