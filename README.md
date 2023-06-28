@@ -1,5 +1,12 @@
 # Devcontainer CLI (Nvim Plugin)
 
+Develop your next Repo in a Devcontainer using Nvim thanks to the [Devconatiner CLI](https://github.com/devcontainers/cli) and this plugin
+![](doc/gifs/nvim_devcontainer_cli-description.gif)
+
+As you can see in the GIF above, [alacritty](https://github.com/alacritty/alacritty) is being used as a Terminal Emulator. Any of the ones recommended [here](https://www.lazyvim.org/) would work. In case you are struggling configuring the nerd fonts, I personally recommend this great [youtube video](https://www.youtube.com/watch?v=mQdB_kHyZn8&t=182s).
+
+---
+
 First, which problem is this plugin trying to solve?
 
 **Situation:**
@@ -23,7 +30,7 @@ But, what is happening under the hood?
 1. Finally, nvim needs certain configuration to work properly. That's why the following [dotfiles repo](https://github.com/arnaupv/dotfiles) is cloned inside the container ([here](https://github.com/arnaupv/nvim-devcontainer-cli/blob/main/bin/devcontainer_setup_scripts/none_root_setup.sh#L6)).
 1. The last step is connecting inside the container. This could be done by `ssh` connection, but in this case the connection is done using `devcontainer exec` ([here](https://github.com/arnaupv/nvim-devcontainer-cli/blob/main/bin/connect_to_devcontainer.sh)).
 
-As you can see what the plugin does is installing and configuring neovim inside the container, instead of communicating with the info inside the container via nvim client/server. One of the negative consequences of such approach is that all plugins need to be installed each time a devcontainer session starts. This is far from being efficient and it is something that needs to be improved in the future. However, I personally consider that the current solution is good enough for starting to work with nvim inside a Docker container.\_
+As you can see what the plugin does is installing and configuring neovim inside the container, instead of communicating with the info inside the container via nvim client/server. One of the negative consequences of such approach is that all plugins need to be installed each time a devcontainer session starts. This is far from being efficient and it is something that needs to be improved in the future. However, I personally consider that the current solution is good enough for starting to work with nvim inside a Docker container.
 
 **Inspiration:**
 
@@ -66,14 +73,14 @@ In case you want to run Github Actions locally, it is recommended to use [act](h
 And then execute:
 
 ```bash
-$ act -W .github/workflows/default.yml
+act -W .github/workflows/default.yml
 ```
 
 Another option would be to connect to the devcontainer following the **How to use?** section.
 Once connected to the devcontainer, execute:
 
 ```bash
-$ make test
+make test
 ```
 
 # FEATUREs (in order of priority)
