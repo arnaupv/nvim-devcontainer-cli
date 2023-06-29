@@ -44,17 +44,26 @@ if ! type nvim >/dev/null 2>&1; then
 
 	# Installing neovim via appimage. Recommended approach: https://github.com/neovim/neovim/releases/download/v0.9.1/nvim-linux64.deb
 	# curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-	curl -LO https://github.com/neovim/neovim/releases/download/v0.8.3/nvim.appimage
-	chmod u+x nvim.appimage
-	./nvim.appimage --appimage-extract
-	./squashfs-root/AppRun --version
-	rm nvim.appimage
+	#
+	# curl -LO https://github.com/neovim/neovim/releases/download/v0.8.3/nvim.appimage
+	# chmod u+x nvim.appimage
+	# ./nvim.appimage --appimage-extract
+	# ./squashfs-root/AppRun --version
+	# rm nvim.appimage
 
 	# Exposing nvim globally
-	if [ ! -d /squashfs-root ]; then
-		mv squashfs-root /
-	fi
-	ln -s /squashfs-root/AppRun /usr/bin/nvim
+	# if [ ! -d /squashfs-root ]; then
+	# 	mv squashfs-root /
+	# fi
+	# ln -s /squashfs-root/AppRun /usr/bin/nvim
+
+	# Steps defined here: https://dev.to/asyncedd/building-neovim-from-source-1794
+	apt-get update
+	apt-get install -y ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen
+	git clone https://github.com/neovim/neovim.git
+	cd neovim
+	make CMAKE_BUILD_TYPE=RelWithDebInfo
+	make install
 
 	# Forcing ~/.config/ accessible by my-app user
 	if [ ! -d /home/my-app/.config ]; then
