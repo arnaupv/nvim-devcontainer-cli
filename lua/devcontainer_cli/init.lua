@@ -13,11 +13,16 @@ function M.setup()
   configured = true
 
   -- Docker
-  vim.api.nvim_create_user_command("DevcontainerUp", function(_)
-    devcontainer_cli.up()
+  vim.api.nvim_create_user_command("DevcontainerUp", function(opts)
+    local env = opts.args or "pro"
+    devcontainer_cli.up({ env = env, remove_existing_container = true })
   end, {
-    nargs = 0,
+    nargs = "*",
     desc = "Up devcontainer using .devcontainer.json",
+    complete = function(ArgLead, CmdLine, CursorPos)
+      -- return completion candidates as a list-like table
+      return { "dev", "pro" }
+    end,
   })
 
   vim.api.nvim_create_user_command("DevcontainerConnect", function(_)

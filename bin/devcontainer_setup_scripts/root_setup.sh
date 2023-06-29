@@ -9,6 +9,8 @@ fi
 
 if ! type nvim >/dev/null 2>&1; then
 	# Updating libraries to ensure nodejs >= 14 is being installed.
+	cd "${HOME}"
+
 	apt-get update
 	apt-get install -y curl wget
 	curl -sL https://deb.nodesource.com/setup_18.x | bash -
@@ -33,28 +35,40 @@ if ! type nvim >/dev/null 2>&1; then
 	install lazygit /usr/local/bin
 	rm lazygit.tar.gz lazygit
 
-	# Installing neovim via .deb
-	# curl -LO https://github.com/neovim/neovim/releases/download/v0.9.1/nvim-linux64.deb
-	# apt install ./nvim-linux64.deb
-	# rm ./nvim-linux64.deb
-
+	NVIM_VERSION=v0.8.3
 	# .deb is not supported for 0.9.0 version upwards. More info: https://github.com/neovim/neovim/issues/22684
 	# Another options for installing neovim:
 	# https://github.com/MordechaiHadad/bob
 
-	# Installing neovim via appimage. Recommended approach: https://github.com/neovim/neovim/releases/download/v0.9.1/nvim-linux64.deb
-	# curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-	curl -LO https://github.com/neovim/neovim/releases/download/v0.8.3/nvim.appimage
-	chmod u+x nvim.appimage
-	./nvim.appimage --appimage-extract
-	./squashfs-root/AppRun --version
-	rm nvim.appimage
+	# Install neovim in the way above only for ARM architectures
+	if [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "arm" ]; then
+		# Steps defined here: https://dev.to/asyncedd/building-neovim-from-source-1794
+		apt-get update
+		apt-get install -y ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen
+		git clone https://github.com/neovim/neovim.git
+		# Versions higher than v0.8.3 present visualization problems when connected inside neovim
+		cd neovim
+		git checkout ${NVIM_VERSION}
+		make CMAKE_BUILD_TYPE=RelWithDebInfo
+		make install
+		cd -
+		rm -rf neovim
+	else
+		# Installing neovim via appimage. Recommended approach: https://github.com/neovim/neovim/releases/download/v0.9.1/nvim-linux64.deb
+		# curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
 
-	# Exposing nvim globally
-	if [ ! -d /squashfs-root ]; then
-		mv squashfs-root /
+		curl -LO https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/nvim.appimage
+		chmod u+x nvim.appimage
+		./nvim.appimage --appimage-extract
+		./squashfs-root/AppRun --version
+		rm nvim.appimage
+
+		# Exposing nvim globally
+		if [ ! -d /squashfs-root ]; then
+			mv squashfs-root /
+		fi
+		ln -s /squashfs-root/AppRun /usr/bin/nvim
 	fi
-	ln -s /squashfs-root/AppRun /usr/bin/nvim
 
 	# Forcing ~/.config/ accessible by my-app user
 	if [ ! -d /home/my-app/.config ]; then
@@ -66,6 +80,12 @@ if ! type nvim >/dev/null 2>&1; then
 		mkdir /home/my-app/.local
 	fi
 
+	# Forcing ~/.cache/ accessible by my-app user
+	if [ ! -d /home/my-app/.cache ]; then
+		mkdir /home/my-app/.cache
+	fi
+
 	chown -R my-app:my-app /home/my-app/.config
 	chown -R my-app:my-app /home/my-app/.local
+	chown -R my-app:my-app /home/my-app/.cache
 fi
