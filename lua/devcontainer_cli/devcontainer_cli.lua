@@ -6,6 +6,7 @@ local M = {}
 local config = {
   devcontainer_folder = ".devcontainer/",
   nvim_plugin_folder = "~/.local/share/nvim/lazy/nvim-devcontainer-cli/",
+  remove_existing_container = true,
 }
 
 local function define_autocommands()
@@ -42,7 +43,13 @@ function M.up(user_config)
     print("Devcontainer folder detected. Path: " .. config.devcontainer_folder)
   end
 
-  local command = config.nvim_plugin_folder .. "/bin/spawn_devcontainer.sh true"
+  local command = config.nvim_plugin_folder .. "/bin/spawn_devcontainer.sh"
+
+  if config.remove_existing_container then
+    command = command .. " --remove-existing-container"
+  end
+  command = command .. " -e " .. config.env
+
   windows_utils.create_floating_terminal(command, {
     on_success = function(win_id)
       vim.notify("A devcontainer has been successfully spawn by the nvim-devcontainer-cli!", vim.log.levels.INFO)
