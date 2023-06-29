@@ -21,8 +21,15 @@ HOME_IN_DOCKER_CONTAINER="/home/my-app/"
 NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER=${HOME_IN_DOCKER_CONTAINER}"${NVIM_DEVCONTAINER_CLI_FOLDER}"
 DEVCONTAINER_OVERRIDE_CONFIG=.devcontainer/devcontainer-override.json
 
+# Check if file .config/github-copilot exists
+if [ ! -d "${HOME}"/.config/github-copilot ]; then
+	echo "File ${HOME}/.config/github-copilot does not exist"
+else
+	MOUNT_BIND_COPILOT="--mount type=bind,source=${HOME}/.config/github-copilot,target=/home/my-app/.config/github-copilot"
+fi
+
 devcontainer up $remove_flag \
-	--mount type=bind,source=${HOME}/.config/github-copilot,target=/home/my-app/.config/github-copilot \
+	${MOUNT_BIND_COPILOT} \
 	--mount type=bind,source="${HOME}"/"${NVIM_DEVCONTAINER_CLI_FOLDER}",target="${NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER}" \
 	--workspace-folder "${workspace}"
 
