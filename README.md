@@ -110,8 +110,9 @@ make test
 1. [x] Capability to attach in a running devcontainer
 1. [x] The floating window created during the devcontainer Up process (:DevcontainerUp<cr>) is closed when the process finishes successfully.
 1. [x] [Give the possibility of defining custom dotfiles when setting up the devcontainer](https://github.com/arnaupv/nvim-devcontainer-cli/issues/1)
+1. [x] [Detect the cause/s of the UI issues of neovim when running inside the docker container.](https://github.com/arnaupv/nvim-devcontainer-cli/issues/15)
 1. [ ] Add unit tests using plenary.busted lua module.
 1. [ ] The logs printed in the floating window when preparing the Devcontainer are saved and easy to access.
-1. [ ] Detect the cause/s of the UI issues of neovim when running inside the docker container.
+
 1. [ ] Convert bash scripts in lua code.
 1. [ ] Create .devcontainer/devcontainer.json template automatically via a nvim command. Add examples for when the devcontainer is created from docker and also from docker-compose.
