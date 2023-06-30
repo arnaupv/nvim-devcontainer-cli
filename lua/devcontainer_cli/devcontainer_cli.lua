@@ -38,6 +38,8 @@ function M.up()
     command = command .. " --remove-existing-container"
   end
   command = command .. " -e " .. config.env
+  command = command .. " -d " .. config.nvim_dotfiles
+  command = command .. " -i " .. '"' .. config.nvim_dotfiles_install .. '"'
 
   print("Spawning devcontainer. Command: " .. command)
   windows_utils.create_floating_terminal(command, {

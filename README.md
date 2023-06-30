@@ -49,12 +49,18 @@ This plugin has been inspired by the work previously done by [esensar](https://g
 ```lua
 {
   "arnaupv/nvim-devcontainer-cli",
-  opts = {},
+  opts = {
+    -- By default, if no extra config is added, following nvim_dotfiles are
+    -- installed: "https://github.com/LazyVim/starter"
+    -- This is an example for configuring other nvim_dotfiles inside the docker container
+    nvim_dotfiles = "https://github.com/arnaupv/dotfiles.git",
+    nvim_dotfiles_install = "cd ~/dotfiles/ && ./install.sh",
+  },
   keys = {
     -- stylua: ignore
     {
       "<leader>cdu",
-      ":DevcontainerUp pro<cr>",
+      ":DevcontainerUp<cr>",
       desc = "Up the DevContainer",
     },
     {
