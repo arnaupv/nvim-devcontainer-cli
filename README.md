@@ -49,9 +49,24 @@ This plugin has been inspired by the work previously done by [esensar](https://g
 ```lua
 {
   "arnaupv/nvim-devcontainer-cli",
-  opts = {}
+  opts = {},
+  keys = {
+    -- stylua: ignore
+    {
+      "<leader>cdu",
+      ":DevcontainerUp pro<cr>",
+      desc = "Up the DevContainer",
+    },
+    {
+      "<leader>cdc",
+      ":DevcontainerConnect<cr>",
+      desc = "Connect to DevContainer",
+    },
+  }
 },
 ```
+
+The default_config can be found [here](./lua/devcontainer_cli/config/init.lua).
 
 # How to use?
 
@@ -93,5 +108,4 @@ make test
 1. [ ] [Give the possibility of defining custom dotfiles when setting up the devcontainer](https://github.com/arnaupv/nvim-devcontainer-cli/issues/1)
 1. [ ] Detect the cause/s of the UI issues of neovim when running inside the docker container.
 1. [ ] Convert bash scripts in lua code.
-1. [ ] Currently bash scripts only support Ubuntu (OS). Once the code is migrated to lua, it has to cover the installation other OS.
 1. [ ] Create .devcontainer/devcontainer.json template automatically via a nvim command. Add examples for when the devcontainer is created from docker and also from docker-compose.

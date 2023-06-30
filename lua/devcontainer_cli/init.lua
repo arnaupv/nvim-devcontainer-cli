@@ -1,10 +1,12 @@
 local M = {}
 
 local devcontainer_cli = require("devcontainer_cli.devcontainer_cli")
-
+local config = require("devcontainer_cli.config")
 local configured = false
 
-function M.setup()
+function M.setup(opts)
+  config.setup(opts)
+
   if configured then
     print("Already configured, skipping!")
     return
@@ -14,15 +16,11 @@ function M.setup()
 
   -- Docker
   vim.api.nvim_create_user_command("DevcontainerUp", function(opts)
-    local env = opts.args or "pro"
-    devcontainer_cli.up({ env = env, remove_existing_container = true })
+    -- Try to use opts.args and if empty use "pro"
+    devcontainer_cli.up()
   end, {
-    nargs = "*",
-    desc = "Up devcontainer using .devcontainer.json",
-    complete = function(ArgLead, CmdLine, CursorPos)
-      -- return completion candidates as a list-like table
-      return { "dev", "pro" }
-    end,
+    nargs = 0,
+    desc = "Up devcontainer using .devcontainer/devcontainer.json",
   })
 
   vim.api.nvim_create_user_command("DevcontainerConnect", function(_)
