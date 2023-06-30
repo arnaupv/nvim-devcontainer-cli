@@ -26,6 +26,14 @@ while [ $# -gt 0 ]; do
 		fi
 		shift 2
 		;;
+	-d | --dotfiles)
+		nvim_dotfiles=$2
+		shift 2
+		;;
+	-i | --install_command)
+		nvim_dotfiles_install=$2
+		shift 2
+		;;
 	*)
 		echo "Invalid option: $1"
 		exit 1
@@ -65,4 +73,4 @@ devcontainer up ${remove_existing_container} \
 # TODO: Instead of having 2 different scripts (for root and not root users) we should have a unique script (simplifying the usage of the plugin)
 devcontainer exec --override-config ${DEVCONTAINER_OVERRIDE_CONFIG} --workspace-folder "${workspace}" sh "${NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER}"/bin/devcontainer_setup_scripts/root_setup.sh
 # Setting Up Devcontainer (no root permits)
-devcontainer exec --workspace-folder "${workspace}" sh "${NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER}"/bin/devcontainer_setup_scripts/none_root_setup.sh
+devcontainer exec --workspace-folder "${workspace}" sh "${NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER}"/bin/devcontainer_setup_scripts/none_root_setup.sh -d "${nvim_dotfiles}" -i "${nvim_dotfiles_install}"

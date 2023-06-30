@@ -15,7 +15,7 @@ function M.setup(opts)
   configured = true
 
   -- Docker
-  vim.api.nvim_create_user_command("DevcontainerUp", function(opts)
+  vim.api.nvim_create_user_command("DevcontainerUp", function(_)
     -- Try to use opts.args and if empty use "pro"
     devcontainer_cli.up()
   end, {

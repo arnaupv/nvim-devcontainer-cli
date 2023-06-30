@@ -18,6 +18,11 @@ local default_config = {
   -- Remove existing container each time DevcontainerUp is executed
   -- If set to True [default_value] it can take extra time as you force to start from scratch
   remove_existing_container = true,
+  -- nvim_dotfiles that will be installed inside the docker devcontainer throught the devcontainer cli.
+  -- [default_value] - LazyVim/starter
+  nvim_dotfiles = "https://github.com/LazyVim/starter",
+  -- nvim_dotfiles_install is the command that needs to be executed to install the dotfiles (it can be any bash command)
+  nvim_dotfiles_install = "mv ~/dotfiles ~/.config/nvim",
 }
 
 local options
