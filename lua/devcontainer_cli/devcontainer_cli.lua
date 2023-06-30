@@ -1,13 +1,8 @@
+local config = require("devcontainer_cli.config")
 local windows_utils = require("devcontainer_cli.windows_utils")
 local folder_utils = require("devcontainer_cli.folder_utils")
 
 local M = {}
-
-local config = {
-  devcontainer_folder = ".devcontainer/",
-  nvim_plugin_folder = "~/.local/share/nvim/lazy/nvim-devcontainer-cli/",
-  remove_existing_container = true,
-}
 
 local function define_autocommands()
   local au_id = vim.api.nvim_create_augroup("devcontainer.docker.terminal", {})
@@ -25,13 +20,7 @@ local function define_autocommands()
   })
 end
 
-function M.up(user_config)
-  user_config = user_config or {}
-
-  for option, value in pairs(user_config) do
-    config[option] = value
-  end
-
+function M.up()
   if not folder_utils.folder_exists(config.devcontainer_folder) then
     print(
       "Devcontainer folder not available: "
@@ -50,6 +39,7 @@ function M.up(user_config)
   end
   command = command .. " -e " .. config.env
 
+  print("Spawning devcontainer. Command: " .. command)
   windows_utils.create_floating_terminal(command, {
     on_success = function(win_id)
       vim.notify("A devcontainer has been successfully spawn by the nvim-devcontainer-cli!", vim.log.levels.INFO)

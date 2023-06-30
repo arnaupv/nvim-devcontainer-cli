@@ -16,16 +16,6 @@ DevcontainerUp                                                  *DevcontainerUp*
     Spawns a docker devcontainer, installing neovim and all the required 
     dependencies for developing your code inside the docker container.
 
-    Following arguments are accepted:
-    "dev":
-      nvim-devcontainer-cli plugin mounted in the devcontainer. This is only needed
-      if you are developing the plugin itself, as the changes inside the container
-      wil be reflected in the host.
-
-    "pro": [default_value]
-      nvim-devcontainer-cli plugin not mount in the devcontainer
-
-
 DevcontainerConnect                                        *DevcontainerConnect*
     Closes the nvim sessions (all sessions fromt the terminal) and opens a new
     terminal which is connected in the docker container, ready to execute the
