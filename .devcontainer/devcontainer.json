@@ -1,1 +1,13 @@
-devcontainer-docker.json
+{
+  "name": "Nvim: Devcontainer CLI",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "args": {
+      "USER_NAME": "my-app",
+      "GROUP_NAME": "my-app"
+    }
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/my-app/.local/share/nvim/lazy/nvim-devcontainer-cli/,type=bind",
+  "workspaceFolder": "/home/my-app/.local/share/nvim/lazy/nvim-devcontainer-cli/",
+  "remoteUser": "my-app"
+}

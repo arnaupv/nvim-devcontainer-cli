@@ -27,7 +27,7 @@ But, what is happening under the hood?
 
 1. First, devcontainer-cli is used for setting up your devcontainer, building the image based on the instructions defined in your [devcontainer.json](.devcontainer/devcontainer.json) and initializing a container based on such image.
 1. Once the container is already running, nvim installed inside the Docker container together with a set of dependencies that can be found [here](https://github.com/arnaupv/nvim-devcontainer-cli/blob/main/bin/devcontainer_setup_scripts/root_setup.sh). This step resembles the installation of the [vscode-server](https://code.visualstudio.com/docs/devcontainers/containers) inside the container when using VSCode.
-1. Finally, nvim needs certain configuration to work properly. That's why the following [dotfiles repo](https://github.com/arnaupv/dotfiles) is cloned inside the container ([here](https://github.com/arnaupv/nvim-devcontainer-cli/blob/main/bin/devcontainer_setup_scripts/none_root_setup.sh#L6)).
+1. Finally, nvim needs certain configuration to work properly. That's why the following [nvim_dotfiles_repo](https://github.com/arnaupv/dotfiles) is cloned inside the container ([here](https://github.com/arnaupv/nvim-devcontainer-cli/blob/main/bin/devcontainer_setup_scripts/none_root_setup.sh#L6)).
 1. The last step is connecting inside the container. This could be done by `ssh` connection, but in this case the connection is done using `devcontainer exec` ([here](https://github.com/arnaupv/nvim-devcontainer-cli/blob/main/bin/connect_to_devcontainer.sh)).
 
 As you can see what the plugin does is installing and configuring neovim inside the container, instead of communicating with the info inside the container via nvim client/server. One of the negative consequences of such approach is that all plugins need to be installed each time a devcontainer session starts. This is far from being efficient and it is something that needs to be improved in the future. However, I personally consider that the current solution is good enough for starting to work with nvim inside a Docker container.
@@ -53,8 +53,11 @@ This plugin has been inspired by the work previously done by [esensar](https://g
     -- By default, if no extra config is added, following nvim_dotfiles are
     -- installed: "https://github.com/LazyVim/starter"
     -- This is an example for configuring other nvim_dotfiles inside the docker container
-    nvim_dotfiles = "https://github.com/arnaupv/dotfiles.git",
-    nvim_dotfiles_install = "cd ~/dotfiles/ && ./install.sh",
+    nvim_dotfiles_repo = "https://github.com/arnaupv/dotfiles.git",
+    nvim_dotfiles_install_command = "cd ~/dotfiles/ && ./install.sh",
+    -- In case you want to change the way the devenvironment is setup, you can also provide your own setup
+    setup_environment_repo = "https://github.com/arnaupv/setup-environment",
+    setup_environment_install_command = "./install.sh -p 'nvim stow zsh'",
   },
   keys = {
     -- stylua: ignore
