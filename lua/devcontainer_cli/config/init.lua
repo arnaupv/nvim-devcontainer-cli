@@ -7,7 +7,7 @@ local default_config = {
     if you are developing the plugin itself, as the changes inside the container
     wil be reflected in the host.
 
-    "pro": [default_value]
+    "pro":
     nvim-devcontainer-cli plugin not mount in the devcontainer.
   --]]
   env = "pro", -- Options: pro/dev
@@ -18,11 +18,14 @@ local default_config = {
   -- Remove existing container each time DevcontainerUp is executed
   -- If set to True [default_value] it can take extra time as you force to start from scratch
   remove_existing_container = true,
+  -- dependencies that have to be installed in the devcontainer (remoteUser = root)
+  setup_environment_repo = "https://github.com/arnaupv/setup-environment",
+  -- command that's executed for installed the dependencies from the setup_environment_repo
+  setup_environment_install_command = "./install.sh -p nvim zsh stow --dotfiles",
   -- nvim_dotfiles that will be installed inside the docker devcontainer throught the devcontainer cli.
-  -- [default_value] - LazyVim/starter
-  nvim_dotfiles = "https://github.com/LazyVim/starter",
+  nvim_dotfiles_repo = "https://github.com/LazyVim/starter",
   -- nvim_dotfiles_install is the command that needs to be executed to install the dotfiles (it can be any bash command)
-  nvim_dotfiles_install = "mv ~/dotfiles ~/.config/nvim",
+  nvim_dotfiles_install_command = "mv ~/dotfiles ~/.config/nvim",
 }
 
 local options
