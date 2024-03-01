@@ -9,6 +9,8 @@ help() {
 	echo "  -e, --env [pro|dev]"
 	echo "  Description: Environment to setup. If 'dev' is specified, the plugin folder is mounted in the container (only needed when developing the plugin)"
 	echo "  Default: pro"
+	echo "  -d, --root_directory"
+	echo "  Description: root_dir where the .devcontainer folder is located"
 	echo "  -s, --setup-environment-repo"
 	echo "  Description: Repository with the instructions needed for installing the dependencies in the devcontainer."
 	echo "  -i, --setup-environment-install-command"
@@ -47,6 +49,10 @@ while [ $# -gt 0 ]; do
 		fi
 		shift 2
 		;;
+	-d | --root_directory)
+		root_dir=$2
+		shift 2
+		;;
 	-s | --setup-environment-repo)
 		setup_environment_repo=$2
 		shift 2
@@ -73,12 +79,7 @@ while [ $# -gt 0 ]; do
 		;;
 	esac
 done
-
-get_project_root_folder() {
-	git rev-parse --show-toplevel
-}
-
-workspace=$(get_project_root_folder)
+workspace=${root_dir}
 cd "${workspace}"
 
 NVIM_DEVCONTAINER_CLI_FOLDER=$(echo "${HOME}"/.local/share/nvim/lazy/nvim-devcontainer-cli/ | sed "s|^$HOME||")
@@ -92,12 +93,21 @@ else
 	MOUNT_BIND_COPILOT="--mount type=bind,source=${HOME}/.config/github-copilot,target=/home/my-app/.config/github-copilot"
 fi
 
+# Check if file .gitconfig exists
+if [ ! -f "${HOME}"/.gitconfig ]; then
+	echo "File ${HOME}/.gitconfig does not exist"
+else
+	MOUNT_BIND_GITCONFIG="--mount type=bind,source=${HOME}/.gitconfig,target=/home/my-app/.gitconfig"
+fi
+
+
 # Mount the plugin folder only if --env is set to dev:
 if [ "$env" = "dev" ]; then
 	MOUNT_BIND_PLUGIN="--mount type=bind,source=${HOME}/${NVIM_DEVCONTAINER_CLI_FOLDER},target=${NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER}"
 fi
 devcontainer up ${remove_existing_container} \
 	${MOUNT_BIND_COPILOT} \
+	${MOUNT_BIND_GITCONFIG} \
 	${MOUNT_BIND_PLUGIN} \
 	--dotfiles-repository "${setup_environment_repo}" \
 	--workspace-folder "${workspace}" \

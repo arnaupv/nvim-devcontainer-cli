@@ -38,6 +38,7 @@ function M.up()
     command = command .. " --remove-existing-container"
   end
   command = command .. " -e " .. config.env
+  command = command .. " --root_directory " .. folder_utils.get_root_folder()
   command = command .. " --setup-environment-repo " .. config.setup_environment_repo
   command = command .. " --setup-environment-install-command " .. '"' .. config.setup_environment_install_command .. '"'
   command = command .. " --nvim-dotfiles-repo " .. '"' .. config.nvim_dotfiles_repo .. '"'

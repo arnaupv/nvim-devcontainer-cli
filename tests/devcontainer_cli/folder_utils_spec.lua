@@ -12,10 +12,12 @@ describe("In folder_utils functions", function()
       local devcontainer_cli_folder = vim.fn.getcwd()
       -- First we check that the we properly changed the directory
       assert(devcontainer_cli_folder == project_root_folder .. "/lua/devcontainer_cli")
-      -- In such subfolder the function for getting the git_root_folder is called
-      local git_root_folder = folder_utils.get_git_root_folder()
-      -- From the subfolder, we check that the get_git_root_folder function returns the folder where the git repo is located instead of the CWD
-      assert(git_root_folder == project_root_folder)
+      -- In such subfolder the function for getting the root_folder is called
+      local root_folder = folder_utils.get_root_folder()
+      -- From the subfolder, we check that the get_root_folder function returns the folder where the git repo is located instead of the CWD
+      print("ROOT" .. root_folder)
+      print("PROJECT_ROOT" .. project_root_folder)
+      assert(root_folder == project_root_folder)
       -- Finally the the folder_exists function is tested to check that it always checks if the folder exists in the root folder even when we are in another folder
       assert(folder_utils.folder_exists(".devcontainer/"))
       -- After running the test we come back to the initial location
