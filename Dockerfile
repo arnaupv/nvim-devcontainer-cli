@@ -5,9 +5,16 @@ ARG GROUP_NAME
 ARG USER_ID
 ARG GROUP_ID
 
-# Create user called my-app in ubuntu
+# Create user called USER_NAME in ubuntu
+# https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user#_creating-a-nonroot-user
 RUN groupadd --gid ${GROUP_ID} ${GROUP_NAME} \
-  && useradd --create-home --no-log-init --uid ${USER_ID} --gid ${GROUP_ID} ${USER_NAME}
+  && useradd --create-home --no-log-init --uid ${USER_ID} --gid ${GROUP_ID} -m ${USER_NAME} \
+  #
+  # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
+  && apt-get update \
+  && apt-get install -y sudo \
+  && echo $USER_NAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USER_NAME \
+  && chmod 0440 /etc/sudoers.d/$USER_NAME
 
 # This part of the code is needed for installing nodejs>=14
 RUN apt-get update && apt-get install -y \
@@ -36,9 +43,9 @@ RUN luarocks install busted
 
 # Setting Up Environment 
 WORKDIR /home/${USER_NAME}
-RUN git clone https://github.com/arnaupv/setup-environment.git \
-  && cd setup-environment \
-  && ./install.sh -p 'nvim stow zsh'
+# RUN git clone https://github.com/arnaupv/setup-environment.git \
+#   && cd setup-environment \
+#   && ./install.sh -p 'nvim stow zsh'
 
 # Switch to user
 USER ${USER_NAME}
