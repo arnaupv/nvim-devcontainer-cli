@@ -40,14 +40,17 @@ function M.up()
   command = command .. " -e " .. config.env
   command = command .. " --root_directory " .. folder_utils.get_root_folder()
   command = command .. " --setup-environment-repo " .. config.setup_environment_repo
+  command = command .. " --setup-environment-dir " .. '"' .. config.setup_environment_directory .. '"'
   command = command .. " --setup-environment-install-command " .. '"' .. config.setup_environment_install_command .. '"'
   command = command .. " --nvim-dotfiles-repo " .. '"' .. config.nvim_dotfiles_repo .. '"'
+  command = command .. " --nvim-dotfiles-branch " .. '"' .. config.nvim_dotfiles_branch .. '"'
+  command = command .. " --nvim-dotfiles-directory " .. '"' .. config.nvim_dotfiles_directory .. '"'
   command = command .. " --nvim-dotfiles-install-command " .. '"' .. config.nvim_dotfiles_install_command .. '"'
 
-  print("Spawning devcontainer. Command: " .. command)
+  print("Spawning devcontainer with command: " .. command)
   windows_utils.create_floating_terminal(command, {
     on_success = function(win_id)
-      vim.notify("A devcontainer has been successfully spawn by the nvim-devcontainer-cli!", vim.log.levels.INFO)
+      vim.notify("A devcontainer has been successfully spawned by the nvim-devcontainer-cli!", vim.log.levels.INFO)
       vim.api.nvim_win_close(win_id, true)
     end,
     on_fail = function(exit_code)
