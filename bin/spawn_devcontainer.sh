@@ -107,29 +107,11 @@ NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER=${REMOTE_HOME}"${NVIM_DEVCONTAI
 DOTFILES_DIR="${REMOTE_HOME}/$nvim_dotfiles_dir"
 SETUP_ENVIRONMENT_DIR="${REMOTE_HOME}/$setup_environment_dir"
 
-# Check if file .config/github-copilot exists
-if [ ! -d "${HOME}"/.config/github-copilot ]; then
-	echo "File ${HOME}/.config/github-copilot does not exist"
-else
-	MOUNT_BIND_COPILOT="--mount type=bind,source=${HOME}/.config/github-copilot,target=${REMOTE_HOME}/.config/github-copilot"
-fi
-
-# Check if file .gitconfig exists
-if [ ! -f "${HOME}"/.gitconfig ]; then
-	echo "File ${HOME}/.gitconfig does not exist"
-else
-	MOUNT_BIND_GITCONFIG="--mount type=bind,source=${HOME}/.gitconfig,target=${REMOTE_HOME}/.gitconfig"
-fi
-
-
 # Mount the plugin folder only if --env is set to dev:
-if [ "$env" = "dev" ]; then
-	MOUNT_BIND_PLUGIN="--mount type=bind,source=${HOME}/${NVIM_DEVCONTAINER_CLI_FOLDER},target=${NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER}"
-fi
+# if [ "$env" = "dev" ]; then
+# 	MOUNT_BIND_PLUGIN="--mount type=bind,source=${HOME}/${NVIM_DEVCONTAINER_CLI_FOLDER},target=${NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER}"
+# fi
 devcontainer up ${remove_existing_container} \
-	${MOUNT_BIND_COPILOT} \
-	${MOUNT_BIND_GITCONFIG} \
-	${MOUNT_BIND_PLUGIN} \
 	--dotfiles-repository "${setup_environment_repo}" \
 	--dotfiles-target-path "${SETUP_ENVIRONMENT_DIR}" \
 	--workspace-folder "${workspace}" \
