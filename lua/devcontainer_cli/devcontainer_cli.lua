@@ -37,7 +37,6 @@ function M.up()
   if config.remove_existing_container then
     command = command .. " --remove-existing-container"
   end
-  command = command .. " -e " .. config.env
   command = command .. " --root_directory " .. folder_utils.get_root_folder()
   command = command .. " --setup-environment-repo " .. config.setup_environment_repo
   command = command .. " --setup-environment-dir " .. '"' .. config.setup_environment_directory .. '"'

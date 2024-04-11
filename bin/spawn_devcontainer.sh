@@ -6,9 +6,6 @@ help() {
 	echo "Options:"
 	echo "  -r, --remove-existing-container"
 	echo "  Description: Remove existing devcontainer before creating a new one."
-	echo "  -e, --env [pro|dev]"
-	echo "  Description: Environment to setup. If 'dev' is specified, the plugin folder is mounted in the container (only needed when developing the plugin)"
-	echo "  Default: pro"
 	echo "  -d, --root_directory"
 	echo "  Description: root_dir where the .devcontainer folder is located"
 	echo "  -s, --setup-environment-repo"
@@ -27,13 +24,12 @@ help() {
 	echo "  Description: Show help."
 	echo ""
 	echo "Example:"
-	echo "  $0 -r -e dev -s https://www.github.com/username/setup-environment -i './install.sh -p nvim zsh stow' -D https://github.com/LazyVim/starter -I 'mv ~/dotfiles ~/.config/nvim'"
+	echo "  $0 -r -s https://www.github.com/username/setup-environment -i './install.sh -p nvim zsh stow' -D https://github.com/LazyVim/starter -I 'mv ~/dotfiles ~/.config/nvim'"
 	echo ""
 }
 
 # Default values
 remove_existing_container=""
-env="pro"
 
 # Handle command-line arguments
 while [ $# -gt 0 ]; do
@@ -41,17 +37,6 @@ while [ $# -gt 0 ]; do
 	-r | --remove-existing-container)
 		remove_existing_container="--remove-existing-container"
 		shift
-		;;
-	-e | --env)
-		if [ "$2" = "dev" ]; then
-			env="dev"
-		elif [ "$2" = "pro" ]; then
-			env="pro"
-		else
-			echo "Invalid env. Please specify either 'dev' or 'pro' for -e."
-			exit 1
-		fi
-		shift 2
 		;;
 	-d | --root_directory)
 		root_dir=$2
@@ -107,29 +92,7 @@ NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER=${REMOTE_HOME}"${NVIM_DEVCONTAI
 DOTFILES_DIR="${REMOTE_HOME}/$nvim_dotfiles_dir"
 SETUP_ENVIRONMENT_DIR="${REMOTE_HOME}/$setup_environment_dir"
 
-# Check if file .config/github-copilot exists
-if [ ! -d "${HOME}"/.config/github-copilot ]; then
-	echo "File ${HOME}/.config/github-copilot does not exist"
-else
-	MOUNT_BIND_COPILOT="--mount type=bind,source=${HOME}/.config/github-copilot,target=${REMOTE_HOME}/.config/github-copilot"
-fi
-
-# Check if file .gitconfig exists
-if [ ! -f "${HOME}"/.gitconfig ]; then
-	echo "File ${HOME}/.gitconfig does not exist"
-else
-	MOUNT_BIND_GITCONFIG="--mount type=bind,source=${HOME}/.gitconfig,target=${REMOTE_HOME}/.gitconfig"
-fi
-
-
-# Mount the plugin folder only if --env is set to dev:
-if [ "$env" = "dev" ]; then
-	MOUNT_BIND_PLUGIN="--mount type=bind,source=${HOME}/${NVIM_DEVCONTAINER_CLI_FOLDER},target=${NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER}"
-fi
 devcontainer up ${remove_existing_container} \
-	${MOUNT_BIND_COPILOT} \
-	${MOUNT_BIND_GITCONFIG} \
-	${MOUNT_BIND_PLUGIN} \
 	--dotfiles-repository "${setup_environment_repo}" \
 	--dotfiles-target-path "${SETUP_ENVIRONMENT_DIR}" \
 	--workspace-folder "${workspace}" \

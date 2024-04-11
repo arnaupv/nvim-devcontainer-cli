@@ -1,16 +1,6 @@
 local ConfigModule = {}
 local file_path = debug.getinfo(1).source:sub(2)
 local default_config = {
-  --[[
-    "dev":
-    nvim-devcontainer-cli plugin mounted in the devcontainer. This is only needed
-    if you are developing the plugin itself, as the changes inside the container
-    wil be reflected in the host.
-
-    "pro":
-    nvim-devcontainer-cli plugin not mount in the devcontainer.
-  --]]
-  env = "pro", -- Options: pro/dev
   -- Folder where devcontainer tool looks for the devcontainer.json file
   devcontainer_folder = ".devcontainer/",
   -- Folder where the nvim-devcontainer-cli is installed
