@@ -89,7 +89,8 @@ local function exec_command(cmd)
 end
 
 function M.up()
-  if not folder_utils.folder_exists(config.devcontainer_folder) then
+  devcontainer_parent = folder_utils.get_root()
+  if devcontainer_parent == nil then
     prev_win = vim.api.nvim_get_current_win()
     vim.notify(
       "Devcontainer folder not available: "
@@ -105,7 +106,7 @@ function M.up()
   if config.remove_existing_container then
     command = command .. " --remove-existing-container"
   end
-  command = command .. " --root_directory " .. folder_utils.get_root_folder()
+  command = command .. " --root_directory " .. devcontainer_parent
   command = command .. " --setup-environment-repo " .. config.setup_environment_repo
   command = command .. " --setup-environment-dir " .. '"' .. config.setup_environment_directory .. '"'
   command = command .. " --setup-environment-install-command " .. '"' .. config.setup_environment_install_command .. '"'
@@ -116,7 +117,7 @@ function M.up()
 
   continue = vim.fn.input(
     windows_utils.wrap_text(
-      "Devcontainer folder detected. Path: " .. config.devcontainer_folder .. "\n" ..
+      "Devcontainer folder detected. Path: " .. devcontainer_parent .. "\n" ..
         "Spawning devcontainer with command: " .. command .. "\n\n" ..
         "Press q to cancel or <enter> to continue\n",
       80

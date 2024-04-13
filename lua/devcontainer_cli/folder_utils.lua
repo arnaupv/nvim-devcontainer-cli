@@ -1,33 +1,46 @@
 local M = {}
 
--- Get root folder
-function M.get_root_folder()
-  local workspace_folders = vim.lsp.buf.list_workspace_folders()
-  local git_dir = vim.fn.system("git rev-parse --show-toplevel 2> /dev/null")
-  local root_dir = ""
-
-  if #workspace_folders > 0 then
-    -- workspace_folders is calculated dinamically by the LSP client
-    -- choose the longest path as root_dir
-    for _, folder in ipairs(workspace_folders) do
-      if #folder > #root_dir then
-        root_dir = folder
-      end
-    end
-    -- choose the last value
-    -- root_dir = workspace_folders[#workspace_folders]
-  else
-    if git_dir == "" then
-      root_dir = vim.fn.getcwd()
-    else
-      root_dir = git_dir
-    end
-  end
-  return root_dir:gsub("\n", "")
+-- return true if directory exists
+local function directory_exists(target_folder)
+  return (vim.fn.isdirectory(target_folder) == 1)
 end
 
-function M.folder_exists(target_folder)
-  return (vim.fn.isdirectory(M.get_root_folder() .. "/" .. target_folder) == 1)
+-- return directory if a devcontainer exists within it or nil otherwise
+local function get_devcontainer_parent(directory)
+  local devcontainer_directory = directory .. '/.devcontainer'
+
+  if directory_exists(devcontainer_directory) then
+    return directory
+  end
+
+  return nil 
+end
+
+-- return the devcontainer directory closes to the root directory
+local function get_root_directory(directory)
+  local parent_directory = vim.fn.fnamemodify(directory, ':h')
+  local devcontainer_parent =  get_devcontainer_parent(directory)
+  
+  -- Base case: If we've reached the root directory
+  if parent_directory == directory then
+    return devcontainer_parent
+  end
+
+  local upper_devcontainer_directory = get_root_directory(parent_directory)
+  -- no devcontainer higher up so return what was found here
+  if upper_devcontainer_directory == nil then
+    return devcontainer_parent
+  end
+
+  -- return the highest level devcontainer
+  return upper_devcontainer_directory
+end
+
+-- find the .devcontainer directory closes to the root 
+-- upward from the current directory
+function M.get_root()
+  local current_directory = vim.fn.getcwd()
+  return get_root_directory(current_directory)
 end
 
 return M
