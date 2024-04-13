@@ -82,7 +82,6 @@ local function exec_command(cmd)
             end
           ) 
         end,
-        scrollback = 1000,
       }
     )
     vim.api.nvim_set_current_buf(buffer)

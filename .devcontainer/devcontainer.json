@@ -17,9 +17,6 @@
   "workspaceFolder": "/home/my-app/.local/share/nvim/lazy/nvim-devcontainer-cli/",
   "remoteUser": "my-app",
 	"features": {
-		"ghcr.io/devcontainers/features/common-utils": {
-			"configureZshAsDefaultShell": "true"
-		},
 		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
 			"packages": "neovim,stow,zsh"
 		}

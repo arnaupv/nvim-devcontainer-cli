@@ -56,4 +56,3 @@ RUN sudo luarocks install busted
 # Installing vim-plug
 COPY ./ /home/${USER}/.local/share/nvim/lazy/nvim-devcontainer-cli/
 RUN mkdir -p /home/${USER}/.local/share/nvim/lazy/nvim-devcontainer-cli/
-RUN chown -R ${USER_NAME}:${GROUP_NAME} /home/${USER_NAME}/.local 
