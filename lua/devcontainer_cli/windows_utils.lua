@@ -1,6 +1,6 @@
 local M = {}
 
-local function wrap_text(text, max_width)
+function M.wrap_text(text, max_width)
   local wrapped_lines = {}
   for line in text:gmatch("[^\n]+") do
     local current_line = ""
@@ -17,7 +17,7 @@ local function wrap_text(text, max_width)
   return table.concat(wrapped_lines, "\n")
 end
 
-function M.open_floating_window() -- content)
+function M.open_floating_window() 
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
 
@@ -37,7 +37,7 @@ function M.open_floating_window() -- content)
     border = "single",
   })
 
-    return win, buf
+  return win, buf
 end
 
 function M.send_text(text, buffer)
@@ -46,28 +46,5 @@ function M.send_text(text, buffer)
   -- Set the content of the buffer
   vim.api.nvim_buf_set_lines(buffer, 0, -1, false, text)
 end
-
--- local function close_window(win, buf)
---   vim.api.nvim_win_close(win, true)
---   vim.api.nvim_buf_delete(buf, {force = true})
--- end
-
--- local function handle_response(response, func, args, buf)
---   if response == "q" or response == "Q" then
---     print("Cancelling...")
---   else
---     fun(args, buf)
---   end
--- end
-
--- function M.prompt_and_run_command(output, func, args)
---   local content = {output .. "Press 'q' to exit or Enter to continue."}
---   local win, buf = open_floating_window(content)
-
---   vim.api.nvim_buf_set_keymap(buf, 'n', 'q', '<Cmd>lua close_window('..win..', '..buf..')<CR>', {noremap = true})
---   vim.api.nvim_buf_set_keymap(buf, 'n', 'Q', '<Cmd>lua close_window('..win..', '..buf..')<CR>', {noremap = true})
---   vim.api.nvim_buf_set_keymap(buf, 'n', '<CR>', '<Cmd>lua handle_response("", '.. func..', '..args..', '..buf..')<CR>', {noremap = true})
-
--- end
 
 return M
