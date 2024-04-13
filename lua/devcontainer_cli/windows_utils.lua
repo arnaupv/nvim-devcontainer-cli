@@ -1,57 +1,73 @@
 local M = {}
 
-function M.create_floating_terminal(command, opts)
-    -- TODO: Adapt size dynamically based on the screen size of the user
-    local on_fail = opts.on_fail
-        or function(exit_code)
-            vim.notify(
-                "The process running in the floating window has failed! exit_code: " .. exit_code,
-                vim.log.levels.ERROR
-            )
-        end
-    local on_success = opts.on_success
-        or function(win_id)
-            vim.notify("The process running in the floating window has succeeded!", vim.log.levels.INFO)
-            vim.api.nvim_win_close(win_id, true)
-        end
-    -- Set the size and position of the floating window
-    local width = 160
-    local height = 40
-    local row = math.floor((vim.o.lines - height) / 2)
-    local col = math.floor((vim.o.columns - width) / 2)
-
-    -- Create the floating window
-    local buf = vim.api.nvim_create_buf(false, true)
-    local win_id = vim.api.nvim_open_win(buf, true, {
-        relative = "editor",
-        width = width,
-        height = height,
-        row = row,
-        col = col,
-        style = "minimal",
-        border = "single",
-    })
-
-    -- Open terminal in the new window
-    -- TODO: this part of the code should not be part of the create_floadting_window funclltion, as it has a different responsability
-    vim.fn.termopen(command, {
-        on_exit = function(_, exit_code)
-            -- TODO: saves the output logs in a file which can be checked anytime.
-            if exit_code == 0 then
-                on_success(win_id)
-            else
-                on_fail(exit_code)
-            end
-        end,
-        on_stdout = function(_, data, _)
-            -- Scroll the terminal window to view new output
-            vim.api.nvim_win_call(win_id, function()
-                vim.cmd("normal! G")
-            end)
-        end,
-        scrollback = 1000, -- Adjust the scrollback limit as needed
-    })
-    vim.api.nvim_set_current_buf(buf)
+local function wrap_text(text, max_width)
+  local wrapped_lines = {}
+  for line in text:gmatch("[^\n]+") do
+    local current_line = ""
+    for word in line:gmatch("%S+") do
+      if #current_line + #word <= max_width then
+        current_line = current_line .. word .. " "
+      else
+        table.insert(wrapped_lines, current_line)
+        current_line = word .. " "
+      end
+    end
+    table.insert(wrapped_lines, current_line)
+  end
+  return table.concat(wrapped_lines, "\n")
 end
+
+function M.open_floating_window() -- content)
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+
+  local width = math.ceil(math.min(vim.o.columns, math.max(80, vim.o.columns - 20)))
+  local height = math.ceil(math.min(vim.o.lines, math.max(20, vim.o.lines - 10)))
+
+  local row = math.ceil(vim.o.lines - height) * 0.5 - 1
+  local col = math.ceil(vim.o.columns - width) * 0.5 - 1
+
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = "editor",
+    width = width,
+    height = height,
+    row = row,
+    col = col,
+    style = "minimal",
+    border = "single",
+  })
+
+    return win, buf
+end
+
+function M.send_text(text, buffer)
+  local text = vim.split(wrap_text(text, 80), "\n")
+
+  -- Set the content of the buffer
+  vim.api.nvim_buf_set_lines(buffer, 0, -1, false, text)
+end
+
+-- local function close_window(win, buf)
+--   vim.api.nvim_win_close(win, true)
+--   vim.api.nvim_buf_delete(buf, {force = true})
+-- end
+
+-- local function handle_response(response, func, args, buf)
+--   if response == "q" or response == "Q" then
+--     print("Cancelling...")
+--   else
+--     fun(args, buf)
+--   end
+-- end
+
+-- function M.prompt_and_run_command(output, func, args)
+--   local content = {output .. "Press 'q' to exit or Enter to continue."}
+--   local win, buf = open_floating_window(content)
+
+--   vim.api.nvim_buf_set_keymap(buf, 'n', 'q', '<Cmd>lua close_window('..win..', '..buf..')<CR>', {noremap = true})
+--   vim.api.nvim_buf_set_keymap(buf, 'n', 'Q', '<Cmd>lua close_window('..win..', '..buf..')<CR>', {noremap = true})
+--   vim.api.nvim_buf_set_keymap(buf, 'n', '<CR>', '<Cmd>lua handle_response("", '.. func..', '..args..', '..buf..')<CR>', {noremap = true})
+
+-- end
 
 return M

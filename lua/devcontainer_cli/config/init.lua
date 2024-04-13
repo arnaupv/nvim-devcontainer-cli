@@ -3,8 +3,8 @@ local file_path = debug.getinfo(1).source:sub(2)
 local default_config = {
   -- Folder where devcontainer tool looks for the devcontainer.json file
   devcontainer_folder = ".devcontainer/",
+  
   -- Folder where the nvim-devcontainer-cli is installed
-
   nvim_plugin_folder = file_path:gsub("init.lua", "") .. "../../../",
   -- Remove existing container each time DevcontainerUp is executed
   -- If set to True [default_value] it can take extra time as you force to start from scratch
@@ -15,6 +15,7 @@ local default_config = {
   setup_environment_directory = "setup_dotfiles",
   -- command that's executed for installed the dependencies from the setup_environment_repo
   setup_environment_install_command = "./install.sh -p nvim zsh stow --dotfiles",
+
   -- nvim_dotfiles that will be installed inside the docker devcontainer through the devcontainer cli.
   nvim_dotfiles_repo = "https://github.com/LazyVim/starter",
   -- branch to use for the nvim_dotfiles

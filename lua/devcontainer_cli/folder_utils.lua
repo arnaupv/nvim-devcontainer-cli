@@ -23,7 +23,6 @@ function M.get_root_folder()
       root_dir = git_dir
     end
   end
-  print("root_dir: " .. root_dir)
   return root_dir:gsub("\n", "")
 end
 
