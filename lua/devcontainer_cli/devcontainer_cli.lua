@@ -89,13 +89,11 @@ local function exec_command(cmd)
 end
 
 function M.up()
-  devcontainer_parent = folder_utils.get_root()
+  devcontainer_parent = folder_utils.get_root(config.toplevel)
   if devcontainer_parent == nil then
     prev_win = vim.api.nvim_get_current_win()
     vim.notify(
-      "Devcontainer folder not available: "
-        .. config.devcontainer_folder
-        .. ". devconatiner_cli_plugin plugin cannot be used",
+      "Devcontainer folder not available. devconatiner_cli_plugin plugin cannot be used",
         vim.log.levels.ERROR
     )
     return

@@ -1,9 +1,8 @@
 local ConfigModule = {}
 local file_path = debug.getinfo(1).source:sub(2)
 local default_config = {
-  -- Folder where devcontainer tool looks for the devcontainer.json file
-  devcontainer_folder = ".devcontainer/",
-  
+  -- use the .devcontainer directory closest to root in the directory tree
+  toplevel = true,
   -- Folder where the nvim-devcontainer-cli is installed
   nvim_plugin_folder = file_path:gsub("init.lua", "") .. "../../../",
   -- Remove existing container each time DevcontainerUp is executed

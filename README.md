@@ -51,6 +51,8 @@ This plugin has been inspired by the work previously done by [esensar](https://g
 {
   "arnaupv/nvim-devcontainer-cli",
   opts = {
+    -- search for the devcontainer directory closest to the root in the directory tree
+    toplevel = true,
     -- By default, if no extra config is added, following nvim_dotfiles are
     -- installed: "https://github.com/LazyVim/starter"
     -- This is an example for configuring other nvim_dotfiles inside the docker container

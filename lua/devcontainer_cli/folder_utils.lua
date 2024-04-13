@@ -17,7 +17,8 @@ local function get_devcontainer_parent(directory)
 end
 
 -- return the devcontainer directory closes to the root directory
-local function get_root_directory(directory)
+-- or the first if toplevel is true
+local function get_root_directory(directory, toplevel)
   local parent_directory = vim.fn.fnamemodify(directory, ':h')
   local devcontainer_parent =  get_devcontainer_parent(directory)
   
@@ -26,7 +27,11 @@ local function get_root_directory(directory)
     return devcontainer_parent
   end
 
-  local upper_devcontainer_directory = get_root_directory(parent_directory)
+  if not toplevel and devcontainer_parent ~= nil then
+    return devcontainer_parent
+  end
+
+  local upper_devcontainer_directory = get_root_directory(parent_directory, toplevel)
   -- no devcontainer higher up so return what was found here
   if upper_devcontainer_directory == nil then
     return devcontainer_parent
@@ -38,9 +43,9 @@ end
 
 -- find the .devcontainer directory closes to the root 
 -- upward from the current directory
-function M.get_root()
+function M.get_root(toplevel)
   local current_directory = vim.fn.getcwd()
-  return get_root_directory(current_directory)
+  return get_root_directory(current_directory, toplevel)
 end
 
 return M
