@@ -6,8 +6,8 @@ ARG USER_ID
 ARG GROUP_ID
 
 # Create user called my-app in ubuntu
-RUN groupadd --gid ${GROUP_ID} ${GROUP_NAME} \
-  && useradd --create-home --no-log-init --uid ${USER_ID} --gid ${GROUP_ID} ${USER_NAME}
+RUN groupadd --gid $GROUP_ID $GROUP_NAME && \
+  useradd --uid $USER_ID --gid $GROUP_ID -m $USER_NAME
 
 # This part of the code is needed for installing nodejs>=14
 RUN apt-get update && apt-get install -y \
@@ -33,12 +33,6 @@ RUN npm install -g @devcontainers/cli@0.49.0
 
 # Installing Lua Dependencies for testing LUA projects
 RUN luarocks install busted
-
-# Setting Up Environment 
-WORKDIR /home/${USER_NAME}
-RUN git clone https://github.com/arnaupv/setup-environment.git \
-  && cd setup-environment \
-  && ./install.sh -p 'nvim stow zsh'
 
 # Switch to user
 USER ${USER_NAME}

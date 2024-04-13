@@ -111,5 +111,7 @@ devcontainer exec --override-config ${DEVCONTAINER_ROOT_CONFIG} --workspace-fold
 rm "${DEVCONTAINER_ROOT_CONFIG}"
 
 # Configuring NVIM dotfiles
-devcontainer exec --workspace-folder "${workspace}" \
-  sh -c "git clone -b '${nvim_dotfiles_branch}' '${nvim_dotfiles_repo}' '${DOTFILES_DIR}' && cd '${DOTFILES_DIR}' && ${nvim_dotfiles_install_command}"
+if [ "$nvim_dotfiles_repo" != "" ] then
+  devcontainer exec --workspace-folder "${workspace}" \
+    sh -c "git clone -b '${nvim_dotfiles_branch}' '${nvim_dotfiles_repo}' '${DOTFILES_DIR}' && cd '${DOTFILES_DIR}' && ${nvim_dotfiles_install_command}"
+fi

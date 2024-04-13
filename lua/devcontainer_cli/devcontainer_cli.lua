@@ -29,7 +29,7 @@ end
 
 local on_fail = function(exit_code)
   vim.notify(
-      "The process running in the floating window has failed! exit_code: " .. exit_code,
+      "Devcontainer process has failed! exit_code: " .. exit_code,
       vim.log.levels.ERROR
   )
 
@@ -40,7 +40,7 @@ local on_fail = function(exit_code)
 end
 
 local on_success = function()
-    vim.notify("The process running in the floating window has succeeded!", vim.log.levels.INFO)
+    vim.notify("Devcontainer process succeeded!", vim.log.levels.INFO)
     -- vim.api.nvim_win_close(win, true)
 end
 
