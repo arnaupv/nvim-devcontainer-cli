@@ -1,9 +1,9 @@
 FROM ubuntu:20.04 as builder
 
-ARG USER_NAME
-ARG GROUP_NAME
-ARG USER_ID
-ARG GROUP_ID
+ENV USER_NAME=my-app
+ARG GROUP_NAME=$USER_NAME
+ARG USER_ID=1000
+ARG GROUP_ID=$USER_ID
 
 # Create user called my-app in ubuntu
 RUN groupadd --gid $GROUP_ID $GROUP_NAME && \
@@ -14,45 +14,34 @@ RUN groupadd --gid $GROUP_ID $GROUP_NAME && \
   && chmod 0440 /etc/sudoers.d/$USER_NAME 
 
 # Switch to user
-USER ${USER_NAME}
+USER $USER_NAME
 
-FROM builder as dev
-
-# This part of the code is needed for installing nodejs>=14
+# Install dependencies needed for building devcontainers/cli and developing in neovim
 RUN sudo apt-get update && \
-  sudo apt-get install -y --no-install-recommends \
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     apt-utils \
     build-essential \
     curl \
     wget \
-  # apt clean-up
-  && sudo apt-get autoremove -y \
-  && sudo rm -rf /var/lib/apt/lists/*
-
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
-
-RUN sudo apt-get update && \
-  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    # Dependencies needed for bulding devcontainers/cli
     nodejs \
     npm \
-    # Dependencies needed for developing in neovim
     lua5.1 \
     luajit \
     luarocks \
     git \
+  # apt clean-up
   && sudo apt-get autoremove -y \
   && sudo rm -rf /var/lib/apt/lists/*
 
-ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+ENV NPM_CONFIG_PREFIX=/home/$USER_NAME/.npm-global
 
 WORKDIR /app
+
 # Installing the devcontainers CLI
 RUN npm install -g @devcontainers/cli@0.49.0
 
 # Installing Lua Dependencies for testing LUA projects
 RUN sudo luarocks install busted
 
-# Installing vim-plug
-COPY ./ /home/${USER}/.local/share/nvim/lazy/nvim-devcontainer-cli/
-RUN mkdir -p /home/${USER}/.local/share/nvim/lazy/nvim-devcontainer-cli/
+# this will prevent the .local directory from being owned by root on bind mount
+RUN mkdir -p /home/$USER_NAME/.local/share/nvim/lazy

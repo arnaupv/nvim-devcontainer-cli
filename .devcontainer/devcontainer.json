@@ -3,22 +3,20 @@
   "build": {
     "dockerfile": "../Dockerfile",
     "args": {
-      "USER_NAME": "my-app",
-      "GROUP_NAME": "my-app",
-      "USER_ID": 1001,
-      "GROUP_ID": 1001
+      "USER_ID": 1000,
+      "GROUP_ID": 1000,
     }
   },
-  "mounts": [
-    "source=${localEnv:HOME}/.config/github-copilot,target=/home/my-app/.config/github-copilot,type=bind",
-    // "source=${localEnv:HOME}/.gitconfig,target=/home/my-app/.gitconfig,type=bind"
-  ],
   "workspaceMount": "source=${localWorkspaceFolder},target=/home/my-app/.local/share/nvim/lazy/nvim-devcontainer-cli/,type=bind",
   "workspaceFolder": "/home/my-app/.local/share/nvim/lazy/nvim-devcontainer-cli/",
   "remoteUser": "my-app",
+  "mounts": [
+    "source=${localEnv:HOME}/.config/github-copilot,target=/home/my-app/.config/github-copilot,type=bind",
+    "source=${localEnv:HOME}/.gitconfig,target=/home/my-app/.gitconfig,type=bind"
+  ],
 	"features": {
 		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
-			"packages": "neovim,stow,zsh"
+			"packages": "neovim,stow,zsh,fzf"
 		}
 	}
 }
