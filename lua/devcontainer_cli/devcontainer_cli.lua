@@ -113,21 +113,29 @@ function M.up()
   command = command .. " --nvim-dotfiles-directory " .. '"' .. config.nvim_dotfiles_directory .. '"'
   command = command .. " --nvim-dotfiles-install-command " .. '"' .. config.nvim_dotfiles_install_command .. '"'
 
-  continue = vim.fn.input(
-    windows_utils.wrap_text(
+  local message = windows_utils.wrap_text(
       "Devcontainer folder detected. Path: " .. devcontainer_parent .. "\n" ..
-        "Spawning devcontainer with command: " .. command .. "\n\n" ..
-        "Press q to cancel or <enter> to continue\n",
+        "Spawning devcontainer with command: " .. command, 
       80
-    )
   )
-  if continue == "q" or continue == "Q" then
-    vim.notify(
-      "\nUser cancelled bringing up devcontainer"
+
+  if config.interactive then
+    vim.ui.input(
+      message .. "\n\n" ..
+          "Press q to cancel or any other key to continue\n",
+      function(input)
+        if (input == "q" or input == "Q") then
+          vim.notify(
+            "\nUser cancelled bringing up devcontainer"
+          )
+        else
+          win, buffer = windows_utils.open_floating_window()
+          exec_command(command)
+        end
+      end
     )
   else
-    win, buffer = windows_utils.open_floating_window()
-    exec_command(command)
+    vim.notify(message)
   end
 end
 

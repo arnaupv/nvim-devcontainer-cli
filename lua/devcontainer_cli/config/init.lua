@@ -1,6 +1,8 @@
 local ConfigModule = {}
 local file_path = debug.getinfo(1).source:sub(2)
 local default_config = {
+  -- whather to verify that the final devcontainer should be run
+  interactive = false,
   -- use the .devcontainer directory closest to root in the directory tree
   toplevel = true,
   -- Folder where the nvim-devcontainer-cli is installed
