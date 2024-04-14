@@ -12,8 +12,8 @@ local win = -1
 local buffer = -1
 
 local function define_autocommands()
-  local au_id = vim.api.nvim_open_augroup("devcontainer.docker.terminal", {})
-  vim.api.nvim_open_autocmd("UILeave", {
+  local au_id = vim.api.nvim_create_augroup("devcontainer.docker.terminal", {})
+  vim.api.nvim_create_autocmd("UILeave", {
     group = au_id,
     callback = function()
       -- It connects with the Devcontainer just after quiting neovim.
@@ -115,7 +115,7 @@ function M.up()
 
   local message = windows_utils.wrap_text(
       "Devcontainer folder detected. Path: " .. devcontainer_parent .. "\n" ..
-        "Spawning devcontainer with command: " .. command, 
+      "Spawning devcontainer with command: " .. command,
       80
   )
 
