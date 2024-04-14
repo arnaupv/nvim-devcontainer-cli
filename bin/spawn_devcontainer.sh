@@ -95,8 +95,8 @@ SETUP_ENVIRONMENT_DIR="${REMOTE_HOME}/$setup_environment_dir"
 devcontainer up ${remove_existing_container} \
 	--dotfiles-repository "${setup_environment_repo}" \
 	--dotfiles-target-path "${SETUP_ENVIRONMENT_DIR}" \
-  --dotfiles-install-command "${setup_environment_install_command}" \
 	--workspace-folder "${workspace}" \
+	--dotfiles-install-command "${setup_environment_install_command}" \
 	--update-remote-user-uid-default off
 
 # Configuring NVIM dotfiles

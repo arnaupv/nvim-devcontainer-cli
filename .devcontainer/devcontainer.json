@@ -4,7 +4,7 @@
     "dockerfile": "../Dockerfile",
     "args": {
       "USER_ID": 1000,
-      "GROUP_ID": 1000,
+      "GROUP_ID": 1000
     }
   },
   "workspaceMount": "source=${localWorkspaceFolder},target=/home/my-app/.local/share/nvim/lazy/nvim-devcontainer-cli/,type=bind",
