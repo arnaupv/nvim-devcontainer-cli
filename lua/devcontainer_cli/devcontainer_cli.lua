@@ -4,9 +4,6 @@ local folder_utils = require("devcontainer_cli.folder_utils")
 
 local M = {}
 
-DEVCONTAINER_BUFFER = nil
-DEVCONTAINER_LOADED = false
-vim.g.devcontainer_opened = 0
 local prev_win = -1
 local win = -1
 local buffer = -1
@@ -27,15 +24,19 @@ local function define_autocommands()
   })
 end
 
+-- window the created window detaches set things back to -1
+local on_detach = function()
+  prev_win = -1
+  win = -1
+  buffer = -1
+end
+
 local on_fail = function(exit_code)
   vim.notify(
       "Devcontainer process has failed! exit_code: " .. exit_code,
       vim.log.levels.ERROR
   )
 
-  DEVCONTAINER_BUFFER = nil
-  DEVCONTAINER_LOADED = false
-  vim.g.devcontainer_opened = 0
   vim.cmd("silent! :checktime")
 end
 
@@ -51,41 +52,27 @@ local function on_exit(job_id, code, event)
     return
   end
 
-  -- if vim.api.nvim_win_is_valid(prev_win) then
-  --   vim.api.nvim_win_close(win, true)
-  --   vim.api.nvim_set_current_win(prev_win)
-  --   prev_win = -1
-  --   if vim.api.nvim_buf_is_valid(buffer) and vim.api.nvim_buf_is_loaded(buffer) then
-  --     vim.api.nvim_buf_delete(buffer, { force = true })
-  --   end
-  --   buffer = -1
-  --   win = -1
-  -- end
-
   on_fail(code)
 end
 
 --- Call devcontainer
 local function exec_command(cmd)
-  if DEVCONTAINER_LOADED == false then
-    -- ensure that the buffer is closed on exit
-    vim.g.devcontainer_opened = 1
-    vim.fn.termopen(
-      cmd, 
-      { 
-        on_exit = on_exit,
-        on_stdout = function(_, data, _)
-          vim .api.nvim_win_call(
-            win,
-            function()
-              vim.cmd("normal! G")
-            end
-          ) 
-        end,
-      }
-    )
-    vim.api.nvim_set_current_buf(buffer)
-  end
+  -- ensure that the buffer is closed on exit
+  vim.fn.termopen(
+    cmd, 
+    { 
+      on_exit = on_exit,
+      on_stdout = function(_, data, _)
+        vim .api.nvim_win_call(
+          win,
+          function()
+            vim.cmd("normal! G")
+          end
+        ) 
+      end,
+    }
+  )
+  vim.api.nvim_set_current_buf(buffer)
 end
 
 function M.up()
@@ -136,6 +123,8 @@ function M.up()
     )
   else
     vim.notify(message)
+    win, buffer = windows_utils.open_floating_window(on_detach)
+    exec_command(command)
   end
 end
 

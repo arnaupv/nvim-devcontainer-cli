@@ -17,9 +17,10 @@ function M.wrap_text(text, max_width)
   return table.concat(wrapped_lines, "\n")
 end
 
-function M.open_floating_window() 
+function M.open_floating_window(on_detach) 
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+  vim.api.nvim_buf_set_option(buf, 'filetype', 'devcontainer-cli')
   vim.api.nvim_buf_set_keymap(buf, 'n', 'q', '<CMD>close<CR>', {}) 
   vim.api.nvim_buf_set_keymap(buf, 'n', '<esc>', '<CMD>close<CR>', {})
 
@@ -40,6 +41,10 @@ function M.open_floating_window()
     title = "devcontainer-cli",
     title_pos = center,
     -- noautocommand = false,
+  })
+  -- Attach autocommand for when the buffer is detached (closed)
+  vim.api.nvim_buf_attach(buf, false, {
+      on_detach = on_detach
   })
 
   return win, buf
