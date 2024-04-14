@@ -20,6 +20,8 @@ end
 function M.open_floating_window() 
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+  vim.api.nvim_buf_set_keymap(buf, 'n', 'q', '<CMD>close<CR>', {}) 
+  vim.api.nvim_buf_set_keymap(buf, 'n', '<esc>', '<CMD>close<CR>', {})
 
   local width = math.ceil(math.min(vim.o.columns, math.max(80, vim.o.columns - 20)))
   local height = math.ceil(math.min(vim.o.lines, math.max(20, vim.o.lines - 10)))
@@ -34,7 +36,10 @@ function M.open_floating_window()
     row = row,
     col = col,
     style = "minimal",
-    border = "single",
+    border = "rounded",
+    title = "devcontainer-cli",
+    title_pos = center,
+    -- noautocommand = false,
   })
 
   return win, buf
