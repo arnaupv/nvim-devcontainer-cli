@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 as builder
+FROM ubuntu:22.04 as builder
 
 ENV USER_NAME=my-app
 ARG GROUP_NAME=$USER_NAME
