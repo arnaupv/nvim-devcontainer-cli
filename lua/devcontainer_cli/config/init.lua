@@ -24,7 +24,7 @@ local default_config = {
   -- directory where to put the nvim_dotfiles
   nvim_dotfiles_directory = "nvim_dotfiles",
   -- nvim_dotfiles_install is the command that needs to be executed to install the dotfiles (it can be any bash command)
-  nvim_dotfiles_install_command = "mv ~/dotfiles ~/.config/nvim",
+  nvim_dotfiles_install_command = "mv ~/nvim_dotfiles ~/.config/nvim",
 }
 
 local options
