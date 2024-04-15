@@ -15,7 +15,7 @@ local default_config = {
   -- directory for the setup environment
   setup_environment_directory = "setup_dotfiles",
   -- command that's executed for installed the dependencies from the setup_environment_repo
-  setup_environment_install_command = "./install.sh -p nvim zsh stow --dotfiles",
+  setup_environment_install_command = "install.sh",
 
   -- nvim_dotfiles that will be installed inside the docker devcontainer through the devcontainer cli.
   nvim_dotfiles_repo = "https://github.com/LazyVim/starter",
@@ -24,7 +24,7 @@ local default_config = {
   -- directory where to put the nvim_dotfiles
   nvim_dotfiles_directory = "nvim_dotfiles",
   -- nvim_dotfiles_install is the command that needs to be executed to install the dotfiles (it can be any bash command)
-  nvim_dotfiles_install_command = "mv ~/nvim_dotfiles ~/.config/nvim",
+  nvim_dotfiles_install_command = "mkdir -p ~/.config && mv ~/nvim_dotfiles ~/.config/nvim",
 }
 
 local options
