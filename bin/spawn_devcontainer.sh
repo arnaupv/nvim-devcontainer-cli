@@ -87,7 +87,15 @@ REMOTE_USER=$(devcontainer read-configuration --include-merged-configuration --w
 WORKSPACE_FOLDER=$(devcontainer read-configuration --include-merged-configuration --workspace-folder . | jq '.workspace.workspaceFolder' | tr -d '"')
 
 NVIM_DEVCONTAINER_CLI_FOLDER=$(echo "${HOME}"/.local/share/nvim/lazy/nvim-devcontainer-cli/ | sed "s|^$HOME||")
-REMOTE_HOME="/home/${REMOTE_USER}"
+echo "REMOTE_USER: $REMOTE_USER"
+
+if [ "${REMOTE_USER}" = "root" ]; then
+    REMOTE_HOME="/root"
+else
+    REMOTE_HOME="/home/${REMOTE_USER}"
+fi
+echo REMOTE_HOME: $REMOTE_HOME
+
 NVIM_DEVCONTAINER_CLI_FOLDER_IN_DOCKER_CONTAINER=${REMOTE_HOME}"${NVIM_DEVCONTAINER_CLI_FOLDER}"
 DOTFILES_DIR="${REMOTE_HOME}/$nvim_dotfiles_dir"
 SETUP_ENVIRONMENT_DIR="${REMOTE_HOME}/$setup_environment_dir"
