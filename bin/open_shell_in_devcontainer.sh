@@ -10,10 +10,17 @@ set -e
 WORKSPACE="$(pwd)"
 SHELL="zsh"
 
-workspace_folder=$(devcontainer read-configuration --include-merged-configuration --log-format json --workspace-folder . 2>/dev/null | jq .workspace.workspaceFolder | sed 's/"//g')
+config_json=$(devcontainer read-configuration --include-merged-configuration --log-format json --workspace-folder . 2>/dev/null)
+workspace_folder=$(echo "$config_json" | jq -r '.workspace.workspaceFolder')
+remote_user=$(echo "$config_json" | jq -r '.configuration.remoteUser // .remoteUser')
+
 docker_id=$(docker ps -q -a --filter label=devcontainer.local_folder="${WORKSPACE}" --filter label=devcontainer.config_file="${WORKSPACE}"/.devcontainer/devcontainer.json)
 
-open_shell_in_devcontainer_command="docker exec -it ${docker_id} bash -c \"cd ${workspace_folder} && ${SHELL}\""
+if [ -n "$remote_user" ] && [ "$remote_user" != "null" ]; then
+    open_shell_in_devcontainer_command="docker exec -it --user ${remote_user} ${docker_id} bash -c \"cd ${workspace_folder} && ${SHELL}\""
+else
+    open_shell_in_devcontainer_command="docker exec -it ${docker_id} bash -c \"cd ${workspace_folder} && ${SHELL}\""
+fi
 
 # Check if we are inside a tmux session
 # If so, create a new pane and execute the open_shell_in_devcontainer_command
